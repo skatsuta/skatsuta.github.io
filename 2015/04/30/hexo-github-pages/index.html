@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Hexo + GitHub Pages で簡単ブログ作成 | Step by Step</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="いまや巷には溢れるほどの静的サイトジェネレータがありますが、このブログは Hexo を使って書き、 GitHub Pages で公開しています。 個人的に今 Go 言語が好きなこともあって Hugo とどちらを使おうかかなり悩んだのですが、僕は（デザインセンスに自信がないので）格好いい出来合いのテーマを使いたかったので、テーマの種類が多い Hexo を選びました。 Hexo の導入自体は非常に簡単">
+<meta name="keywords" content="Hexo,GitHub Pages">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo + GitHub Pages で簡単ブログ作成">
+<meta property="og:url" content="https://skatsuta.github.io/2015/04/30/hexo-github-pages/index.html">
+<meta property="og:site_name" content="Step by Step">
+<meta property="og:description" content="いまや巷には溢れるほどの静的サイトジェネレータがありますが、このブログは Hexo を使って書き、 GitHub Pages で公開しています。 個人的に今 Go 言語が好きなこともあって Hugo とどちらを使おうかかなり悩んだのですが、僕は（デザインセンスに自信がないので）格好いい出来合いのテーマを使いたかったので、テーマの種類が多い Hexo を選びました。 Hexo の導入自体は非常に簡単">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:updated_time" content="2018-03-13T08:06:37.810Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo + GitHub Pages で簡単ブログ作成">
+<meta name="twitter:description" content="いまや巷には溢れるほどの静的サイトジェネレータがありますが、このブログは Hexo を使って書き、 GitHub Pages で公開しています。 個人的に今 Go 言語が好きなこともあって Hugo とどちらを使おうかかなり悩んだのですが、僕は（デザインセンスに自信がないので）格好いい出来合いのテーマを使いたかったので、テーマの種類が多い Hexo を選びました。 Hexo の導入自体は非常に簡単">
+  
+    <link rel="alternative" href="/atom.xml" title="Step by Step" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-62443224-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Step by Step</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">1歩ずつ 確実に 進歩していこう</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.google.com/search" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="q" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="hidden" name="sitesearch" value="skatsuta.github.io">
+          <input type="submit" value="" class="search-form-submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-hexo-github-pages" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/30/hexo-github-pages/" class="article-date">
+  <time datetime="2015-04-30T08:34:17.000Z" itemprop="datePublished">2015-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hexo + GitHub Pages で簡単ブログ作成
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>いまや巷には<a href="https://staticsitegenerators.net/" target="_blank" rel="noopener">溢れるほどの静的サイトジェネレータがあります</a>が、このブログは <a href="http://hexo.io" target="_blank" rel="noopener">Hexo</a> を使って書き、 GitHub Pages で公開しています。 個人的に今 Go 言語が好きなこともあって <a href="http://gohugo.io" target="_blank" rel="noopener">Hugo</a> とどちらを使おうかかなり悩んだのですが、僕は（デザインセンスに自信がないので）格好いい出来合いのテーマを使いたかったので、テーマの種類が多い Hexo を選びました。</p>
+<p>Hexo の導入自体は非常に簡単なのですが、 GitHub Pages と連携させる際のやり方が最近ちょっと変わったらしく、検索して出てきた情報がどれも古かったので、覚え書きも兼ねて書いてみます。</p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p>以下のサイトを参考にさせていただきました。</p>
+<ul>
+<li><a href="http://liginc.co.jp/web/programming/server/104594" target="_blank" rel="noopener">所要時間3分!? Github PagesとHEXOで爆速ブログ構築してみよう！ | 株式会社LIG</a></li>
+<li><a href="http://blog.otakumode.com/2014/08/08/Blogging-with-hexoio/" target="_blank" rel="noopener">チームブログをGitHubとHexoではじめよう！ | Tokyo Otaku Mode Blog</a></li>
+<li><a href="http://qiita.com/bird_nitryn/items/5988a1efe47e0d47132b" target="_blank" rel="noopener">Hexo と GitHub Pages でブログ環境を構築して公開する - Qiita</a></li>
+</ul>
+<p>ただし注意点として、これらの記事はどれも Github Pages で公開する手順の設定情報が古いです。現在の正しい設定は下記「<strong>GitHub Pages で公開する</strong>」のセクションに書きました。</p>
+<h2 id="Hexo-を導入する"><a href="#Hexo-を導入する" class="headerlink" title="Hexo を導入する"></a>Hexo を導入する</h2><p>まず Git と Node がインストールされていることが前提です。これらの導入方法については省略します。</p>
+<p>Hexo の導入自体は<a href="http://hexo.io" target="_blank" rel="noopener">公式サイトのトップページ</a>に載っている通りにコマンドを実行するだけです。が、 Hexo のリソース自体も GitHub などで管理したほうがいいので、先にリポジトリを作った上で、それをクローンしてきて、その中で Hexo の初期化を実行したほうが良いと思います。</p>
+<p>以下は僕の例です。 <a href="https://github.com/skatsuta/blog-hexo" target="_blank" rel="noopener">skatsuta/blog-hexo</a> という GitHub リポジトリを作った上で、以下を実行します。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hexo をインストールする</span></span><br><span class="line">$ npm install -g hexo-cli</span><br><span class="line"></span><br><span class="line"><span class="comment"># 作っておいた Hexo 用のリポジトリをクローンしてくる</span></span><br><span class="line">$ git <span class="built_in">clone</span> git@github.com:skatsuta/blog-hexo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># Hexo の初期化を実行する</span></span><br><span class="line"><span class="comment"># (必要なファイル/フォルダが生成されるとともに、.gitignore が上書きされます)</span></span><br><span class="line">$ hexo init blog-hexo</span><br><span class="line"></span><br><span class="line"><span class="comment"># リポジトリに移動する</span></span><br><span class="line">$ <span class="built_in">cd</span> blog-hexo</span><br><span class="line"></span><br><span class="line"><span class="comment"># npm モジュールをインストールする</span></span><br><span class="line">$ npm install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Hexo サーバを動かしてプレビューを確認する</span></span><br><span class="line">$ hexo server</span><br><span class="line">INFO  Hexo is running at http://0.0.0.0:4000/. Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
+<p>メッセージの通り <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> にアクセスしてみて、無事にプレビューが表示されればとりあえずの構築は完了です。</p>
+<h2 id="ファイルの変更をブラウザに即時反映する"><a href="#ファイルの変更をブラウザに即時反映する" class="headerlink" title="ファイルの変更をブラウザに即時反映する"></a>ファイルの変更をブラウザに即時反映する</h2><p>デフォルトでは記事を書き換えてもプレビューには即時反映されず、毎回サーバを再起動しなければなりません。 Markdown エディタで書けばだいたいの仕上がり具合はわかりますが、やはり実際に適用されるテーマとは違ってしまいます。</p>
+<p>そこで <a href="http://www.browsersync.io/" target="_blank" rel="noopener">BrowserSync</a> を使い、プレビューへの即時反映の設定をしてみたいと思います。</p>
+<p>まず <a href="http://www.browsersync.io/#install" target="_blank" rel="noopener">Get started in 5 minutes</a> の <strong>2.</strong> に従い、 BrowserSync をインストールします。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g browser-sync</span><br></pre></td></tr></table></figure>
+<p>続いて、 <a href="https://github.com/hexojs/hexo-browsersync" target="_blank" rel="noopener">hexo-browsersync</a> プラグインをインストールします。 <code>package.json</code> にも加えたいので、 <code>--save</code> オプションを付けておきます。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-browsersync --save</span><br></pre></td></tr></table></figure>
+<p>これで導入は終わりです。再び Hexo サーバを立ち上げてから設定や記事を書き換えて保存すると、そのたびに以下のようなメッセージが出てブラウザがリロードされ、変更点がプレビューに即時に反映されるはずです。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br><span class="line">INFO  Hexo is running at http://0.0.0.0:4000/. Press Ctrl+C to stop.</span><br><span class="line">[BS] Reloading Browsers...</span><br><span class="line">[BS] Reloading Browsers...</span><br><span class="line">[BS] Reloading Browsers...</span><br></pre></td></tr></table></figure>
+<h2 id="記事を書く"><a href="#記事を書く" class="headerlink" title="記事を書く"></a>記事を書く</h2><p>快適な執筆環境が整ったところで、早速記事を書いていきます。 Hexo で新しく記事を作るには以下のコマンドを実行します。たとえば <code>Hello, World</code> というタイトルの記事を書く場合です。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"Hello, World"</span></span><br><span class="line">INFO  Created: ~/repos/blog-hexo/<span class="built_in">source</span>/_posts/Hello-World.md</span><br></pre></td></tr></table></figure>
+<p>生成された Markdown ファイルの中は次のようになっています。</p>
+<h5 id="source-posts-Hello-World-md"><a href="#source-posts-Hello-World-md" class="headerlink" title="source/_posts/Hello-World.md"></a>source/_posts/Hello-World.md</h5><figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title: "Hello, World"</span><br><span class="line">date: 2015-04-30 17:03:08</span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>あとは Markdown で好きなように記事を書いていきます。 BrowserSync を入れているとそのありがたみがわかりますよね？</p>
+<h4 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h4><p>日本語で書く場合たいていタイトルも日本語になると思うので、 <code>hexo new &quot;日本語タイトル&quot;</code> というようにコマンド発行したいところです。しかしそうするとファイル名も日本語になってしまい、 Git での管理時にちょっと面倒なことが生じる場合が多いです。なので、ファイル名は英語で生成しておいて、 <code>title:</code> 部分を日本語に書き換えるほうが吉です。このあたりがちょっとした不満点ですね。</p>
+<h2 id="GitHub-Pages-で公開する"><a href="#GitHub-Pages-で公開する" class="headerlink" title="GitHub Pages で公開する"></a>GitHub Pages で公開する</h2><p>最後に GitHub Pages で公開します。</p>
+<p><a href="http://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Hexo の Deployment のページ</a>にある通り、まず <a href="https://github.com/hexojs/hexo-deployer-git" target="_blank" rel="noopener">hexo-deployer-git</a> プラグインをインストールします。これも <code>package.json</code> に加えたいので、 <code>--save</code> オプションを付けておきます。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>続いて <code>_config.yml</code> の <code>deploy</code> の項目に必要な設定を追記します。以下は僕の例です。 </p>
+<h5 id="config-yml"><a href="#config-yml" class="headerlink" title="_config.yml"></a>_config.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="string">git@github.com:skatsuta/skatsuta.github.io.git</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<p>GitHub Pages で公開する場合には、<a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages のドキュメント</a>にもある通り、 <code>&lt;username&gt;.github.io</code> というリポジトリを作ります。そこにプッシュされたコンテンツが自動的に <code>http://&lt;username&gt;.github.io/</code> で公開されるようになります。</p>
+<p>最後に、 Hexo で以下のコマンドを使ってデプロイします。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy --generate</span><br></pre></td></tr></table></figure>
+<p>上記のコマンドは以下と同じ意味になります。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 静的コンテンツを生成する</span></span><br><span class="line">$ hexo generate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 静的コンテンツを設定されたデプロイ先にデプロイする</span></span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>実際には、デプロイの際にいったん既存の生成データをすべて削除した上で再生成したほうが良さそうなため、僕は次のようなシェルスクリプトを実行しています。 <code>hexo clean</code> は生成コンテンツとキャッシュをすべて削除するコマンドです。</p>
+<h5 id="deploy-sh"><a href="#deploy-sh" class="headerlink" title="deploy.sh"></a>deploy.sh</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo deploy --generate</span><br></pre></td></tr></table></figure>
+<p>以上が完了すると、 <a href="http://skatsuta.github.io/">http://skatsuta.github.io/</a> にこのブログが公開されます。</p>
+<h2 id="ね、簡単でしょう？"><a href="#ね、簡単でしょう？" class="headerlink" title="ね、簡単でしょう？"></a>ね、簡単でしょう？</h2><p>Hexo は記事をすべて Markdown で書けるので簡単にバージョン管理ができますし、他の Markdown 対応静的サイトジェネレータに移行するのもハードルが低いです。</p>
+<p>ちなみにこのブログのテーマには <a href="https://github.com/xiangming/landscape-plus" target="_blank" rel="noopener">Landscape plus</a> を少しカスタムして使っています。デフォルトで結構格好いいので気に入っています。</p>
+<p>当分の間は Hexo をいろいろいじりながら使ってみようと思います。 Hugo がもう少し成熟したらそちらも使ってみたいですね。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/04/30/hexo-github-pages/" data-id="cjepfn0nv0007urcqow3fjvz5" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/04/30/hexo-github-pages/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/05/01/angularjs-filter-japanese/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          AngularJS のフィルタを日本語表記に合わせる
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/04/29/shell-script/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">シェルスクリプトの覚え書き</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Aerospike/">Aerospike</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Amazon-EC2/">Amazon EC2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/">Ant</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boot2Docker/">Boot2Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CLI/">CLI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cryptography/">Cryptography</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DES/">DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Machine/">Docker Machine</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Remote-API/">Docker Remote API</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Driver-Plugins/">Driver Plugins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPie/">HTTPie</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVS/">KVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/">Maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Play-Framework/">Play Framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rijndael/">Rijndael</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ruby/">Ruby</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RubyGems/">RubyGems</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Triple-DES/">Triple DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/">VirtualBox</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aql/">aql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bashrc/">bashrc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sbt/">sbt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-script/">shell script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wercker/">wercker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zshrc/">zshrc</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 12.5px;">AES</a> <a href="/tags/Aerospike/" style="font-size: 12.5px;">Aerospike</a> <a href="/tags/Amazon-EC2/" style="font-size: 10px;">Amazon EC2</a> <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/Ant/" style="font-size: 10px;">Ant</a> <a href="/tags/Boot2Docker/" style="font-size: 10px;">Boot2Docker</a> <a href="/tags/CBC-Mode/" style="font-size: 10px;">CBC Mode</a> <a href="/tags/CLI/" style="font-size: 10px;">CLI</a> <a href="/tags/Cryptography/" style="font-size: 15px;">Cryptography</a> <a href="/tags/DES/" style="font-size: 10px;">DES</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Docker-Machine/" style="font-size: 15px;">Docker Machine</a> <a href="/tags/Docker-Remote-API/" style="font-size: 10px;">Docker Remote API</a> <a href="/tags/Driver-Plugins/" style="font-size: 10px;">Driver Plugins</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Go/" style="font-size: 20px;">Go</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/HTTPie/" style="font-size: 10px;">HTTPie</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/KVS/" style="font-size: 10px;">KVS</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Play-Framework/" style="font-size: 10px;">Play Framework</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/Rijndael/" style="font-size: 10px;">Rijndael</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/RubyGems/" style="font-size: 10px;">RubyGems</a> <a href="/tags/Scala/" style="font-size: 10px;">Scala</a> <a href="/tags/Triple-DES/" style="font-size: 10px;">Triple DES</a> <a href="/tags/VirtualBox/" style="font-size: 12.5px;">VirtualBox</a> <a href="/tags/aql/" style="font-size: 10px;">aql</a> <a href="/tags/bashrc/" style="font-size: 10px;">bashrc</a> <a href="/tags/sbt/" style="font-size: 10px;">sbt</a> <a href="/tags/shell-script/" style="font-size: 10px;">shell script</a> <a href="/tags/wercker/" style="font-size: 15px;">wercker</a> <a href="/tags/zshrc/" style="font-size: 10px;">zshrc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">3月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">1月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">12月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">11月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">10月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">8月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">7月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">6月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">5月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">4月 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/06/hyuki-crypt-book-go-3/">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/19/hyuki-crypt-book-go-2/">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/02/hyuki-crypt-book-go-1/">Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/29/value-receiver-pointer-receiver/">Go 言語の値レシーバとポインタレシーバ</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/22/docker-machine-plugin/">Docker Machine v0.5 の Driver Plugins の仕組み</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 skatsuta<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'skatsutagithubio';
+  
+  var disqus_url = 'https://skatsuta.github.io/2015/04/30/hexo-github-pages/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62443224-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

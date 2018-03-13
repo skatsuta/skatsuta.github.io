@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>シェルスクリプトの覚え書き | Step by Step</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="たまにしか書かないのでいつも忘れてしまい、書く必要があるときになって毎度調べ直しているので、覚え書きとしてきちんとまとめてみます。 内容は非常に初歩的なことばかりです。 shebangシェルスクリプトの先頭に書く宣言文。どのシェルを利用して実行するかを指定する。 1#!/bin/bash 変数シェル変数実行しているシェルの内部でのみ有効な変数。 12# 変数abcに123を代入するabc=123">
+<meta name="keywords" content="shell script">
+<meta property="og:type" content="article">
+<meta property="og:title" content="シェルスクリプトの覚え書き">
+<meta property="og:url" content="https://skatsuta.github.io/2015/04/29/shell-script/index.html">
+<meta property="og:site_name" content="Step by Step">
+<meta property="og:description" content="たまにしか書かないのでいつも忘れてしまい、書く必要があるときになって毎度調べ直しているので、覚え書きとしてきちんとまとめてみます。 内容は非常に初歩的なことばかりです。 shebangシェルスクリプトの先頭に書く宣言文。どのシェルを利用して実行するかを指定する。 1#!/bin/bash 変数シェル変数実行しているシェルの内部でのみ有効な変数。 12# 変数abcに123を代入するabc=123">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:updated_time" content="2018-03-13T08:06:37.811Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="シェルスクリプトの覚え書き">
+<meta name="twitter:description" content="たまにしか書かないのでいつも忘れてしまい、書く必要があるときになって毎度調べ直しているので、覚え書きとしてきちんとまとめてみます。 内容は非常に初歩的なことばかりです。 shebangシェルスクリプトの先頭に書く宣言文。どのシェルを利用して実行するかを指定する。 1#!/bin/bash 変数シェル変数実行しているシェルの内部でのみ有効な変数。 12# 変数abcに123を代入するabc=123">
+  
+    <link rel="alternative" href="/atom.xml" title="Step by Step" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-62443224-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Step by Step</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">1歩ずつ 確実に 進歩していこう</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.google.com/search" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="q" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="hidden" name="sitesearch" value="skatsuta.github.io">
+          <input type="submit" value="" class="search-form-submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-shell-script" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/29/shell-script/" class="article-date">
+  <time datetime="2015-04-29T12:21:49.000Z" itemprop="datePublished">2015-04-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      シェルスクリプトの覚え書き
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>たまにしか書かないのでいつも忘れてしまい、書く必要があるときになって毎度調べ直しているので、覚え書きとしてきちんとまとめてみます。</p>
+<p>内容は非常に初歩的なことばかりです。</p>
+<h2 id="shebang"><a href="#shebang" class="headerlink" title="shebang"></a>shebang</h2><p>シェルスクリプトの先頭に書く宣言文。<br>どのシェルを利用して実行するかを指定する。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br></pre></td></tr></table></figure>
+<h2 id="変数"><a href="#変数" class="headerlink" title="変数"></a>変数</h2><h3 id="シェル変数"><a href="#シェル変数" class="headerlink" title="シェル変数"></a>シェル変数</h3><p>実行しているシェルの内部でのみ有効な変数。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 変数abcに123を代入する</span></span><br><span class="line">abc=123</span><br></pre></td></tr></table></figure>
+<h3 id="環境変数"><a href="#環境変数" class="headerlink" title="環境変数"></a>環境変数</h3><p>シェルから実行されたコマンド内でも有効な変数。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 環境変数abcを設定する</span></span><br><span class="line"><span class="built_in">export</span> abc=123</span><br></pre></td></tr></table></figure>
+<h2 id="read-コマンド"><a href="#read-コマンド" class="headerlink" title="read コマンド"></a><code>read</code> コマンド</h2><p>標準入力からデータを読み込む。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># abc に標準出力からのデータを代入する</span></span><br><span class="line"><span class="built_in">read</span> abc</span><br></pre></td></tr></table></figure>
+<h2 id="引用符"><a href="#引用符" class="headerlink" title="引用符"></a>引用符</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 変数 abc に文字列 xyz をセットする</span></span><br><span class="line">$ abc=xyz</span><br><span class="line"></span><br><span class="line"><span class="comment"># シングルクォーテーションは文字列として認識する</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">'The value of abc is $abc.'</span></span><br><span class="line">The value of abc is <span class="variable">$abc</span>.</span><br><span class="line"></span><br><span class="line"><span class="comment"># ダブルクォーテーションは変数として展開する</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">"The value of abc is <span class="variable">$abc</span>."</span></span><br><span class="line">The value of abc is xyz.</span><br><span class="line"></span><br><span class="line"><span class="comment"># バッククオートはコマンドとして実行する</span></span><br><span class="line">$ abc=`date`</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$abc</span></span><br><span class="line">2014年 7月 15日 火曜日 17:56:34 JST</span><br></pre></td></tr></table></figure>
+<h2 id="引数"><a href="#引数" class="headerlink" title="引数"></a>引数</h2><p><code>$0</code>は実行コマンド名、<code>$#</code>は引数の数を表す。</p>
+<h3 id="args-sh"><a href="#args-sh" class="headerlink" title="args.sh"></a>args.sh</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'$1: '</span> <span class="variable">$1</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'$2: '</span> <span class="variable">$2</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'$0: '</span> <span class="variable">$0</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'$#: '</span> <span class="variable">$#</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="実行結果"><a href="#実行結果" class="headerlink" title="実行結果"></a>実行結果</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ./args.sh aaa bbb</span><br><span class="line"><span class="variable">$1</span>: aaa</span><br><span class="line"><span class="variable">$2</span>: bbb</span><br><span class="line"><span class="variable">$0</span>: ./args.sh</span><br><span class="line"><span class="variable">$#</span>: 2</span><br></pre></td></tr></table></figure>
+<h2 id="エスケープシーケンス"><a href="#エスケープシーケンス" class="headerlink" title="エスケープシーケンス"></a>エスケープシーケンス</h2><p>行末にバックスラッシュをつけると、<strong>改行コードがエスケープ</strong>されて文字列を途中で折り返すことができる。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"Hi! \</span></span><br><span class="line"><span class="string">Today is the day!"</span></span><br><span class="line">Hi! Today is the day!</span><br></pre></td></tr></table></figure>
+<h2 id="条件分岐"><a href="#条件分岐" class="headerlink" title="条件分岐"></a>条件分岐</h2><h3 id="構文"><a href="#構文" class="headerlink" title="構文"></a>構文</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ condition1 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"><span class="keyword">elif</span> [ condition2 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<h2 id="演算子"><a href="#演算子" class="headerlink" title="演算子"></a>演算子</h2><h3 id="文字列比較"><a href="#文字列比較" class="headerlink" title="文字列比較"></a>文字列比較</h3><table>
+<thead>
+<tr>
+<th>演算子</th>
+<th>比較内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a == b</code></td>
+<td>a と b が等しければ真</td>
+</tr>
+<tr>
+<td><code>a != b</code></td>
+<td>a と b が等しくなければ真</td>
+</tr>
+</tbody>
+</table>
+<h3 id="数値比較"><a href="#数値比較" class="headerlink" title="数値比較"></a>数値比較</h3><table>
+<thead>
+<tr>
+<th>演算子</th>
+<th>比較内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a -eq b</code></td>
+<td>a と b が等しければ真</td>
+</tr>
+<tr>
+<td><code>a -ne b</code></td>
+<td>a と b が等しくなければ真</td>
+</tr>
+<tr>
+<td><code>a -ge b</code></td>
+<td>a が b 以上なら真</td>
+</tr>
+<tr>
+<td><code>a -le b</code></td>
+<td>a が b 以下なら真</td>
+</tr>
+<tr>
+<td><code>a -gt b</code></td>
+<td>a が b より大きいなら真</td>
+</tr>
+<tr>
+<td><code>a -lt b</code></td>
+<td>a が b より小さいなら真</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ファイル属性の確認"><a href="#ファイル属性の確認" class="headerlink" title="ファイル属性の確認"></a>ファイル属性の確認</h2><p>パスがディレクトリであれば真</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -d path ]; <span class="keyword">then</span> ...</span><br></pre></td></tr></table></figure>
+<h3 id="test-コマンドの書き方2通り"><a href="#test-コマンドの書き方2通り" class="headerlink" title="test コマンドの書き方2通り"></a>test コマンドの書き方2通り</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> 条件節; <span class="keyword">then</span> ...</span><br><span class="line"><span class="keyword">if</span> [ 条件節 ]; <span class="keyword">then</span> ...</span><br></pre></td></tr></table></figure>
+<h3 id="ファイル属性を確認する演算子"><a href="#ファイル属性を確認する演算子" class="headerlink" title="ファイル属性を確認する演算子"></a>ファイル属性を確認する演算子</h3><table>
+<thead>
+<tr>
+<th>演算子</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-f ファイル名</code></td>
+<td>通常ファイルなら真</td>
+</tr>
+<tr>
+<td><code>-d ファイル名</code></td>
+<td>ディレクトリなら真</td>
+</tr>
+<tr>
+<td><code>-e ファイル名</code></td>
+<td>ファイルが存在すれば真</td>
+</tr>
+<tr>
+<td><code>-L ファイル名</code></td>
+<td>シンボリックリンクなら真</td>
+</tr>
+<tr>
+<td><code>-r ファイル名</code></td>
+<td>読み取り可能なら真</td>
+</tr>
+<tr>
+<td><code>-w ファイル名</code></td>
+<td>書き込み可能なら真</td>
+</tr>
+<tr>
+<td><code>-x ファイル名</code></td>
+<td>ファイルに実行権限があれば真</td>
+</tr>
+<tr>
+<td><code>-s ファイル名</code></td>
+<td>サイズが0より大きければ真</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/04/29/shell-script/" data-id="cjepfn0ob000murcqpuxu1cir" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/04/29/shell-script/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell-script/">shell script</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/04/30/hexo-github-pages/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hexo + GitHub Pages で簡単ブログ作成
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Aerospike/">Aerospike</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Amazon-EC2/">Amazon EC2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/">Ant</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boot2Docker/">Boot2Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CLI/">CLI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cryptography/">Cryptography</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DES/">DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Machine/">Docker Machine</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Remote-API/">Docker Remote API</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Driver-Plugins/">Driver Plugins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPie/">HTTPie</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVS/">KVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/">Maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Play-Framework/">Play Framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rijndael/">Rijndael</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ruby/">Ruby</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RubyGems/">RubyGems</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Triple-DES/">Triple DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/">VirtualBox</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aql/">aql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bashrc/">bashrc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sbt/">sbt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-script/">shell script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wercker/">wercker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zshrc/">zshrc</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 12.5px;">AES</a> <a href="/tags/Aerospike/" style="font-size: 12.5px;">Aerospike</a> <a href="/tags/Amazon-EC2/" style="font-size: 10px;">Amazon EC2</a> <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/Ant/" style="font-size: 10px;">Ant</a> <a href="/tags/Boot2Docker/" style="font-size: 10px;">Boot2Docker</a> <a href="/tags/CBC-Mode/" style="font-size: 10px;">CBC Mode</a> <a href="/tags/CLI/" style="font-size: 10px;">CLI</a> <a href="/tags/Cryptography/" style="font-size: 15px;">Cryptography</a> <a href="/tags/DES/" style="font-size: 10px;">DES</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Docker-Machine/" style="font-size: 15px;">Docker Machine</a> <a href="/tags/Docker-Remote-API/" style="font-size: 10px;">Docker Remote API</a> <a href="/tags/Driver-Plugins/" style="font-size: 10px;">Driver Plugins</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Go/" style="font-size: 20px;">Go</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/HTTPie/" style="font-size: 10px;">HTTPie</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/KVS/" style="font-size: 10px;">KVS</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Play-Framework/" style="font-size: 10px;">Play Framework</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/Rijndael/" style="font-size: 10px;">Rijndael</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/RubyGems/" style="font-size: 10px;">RubyGems</a> <a href="/tags/Scala/" style="font-size: 10px;">Scala</a> <a href="/tags/Triple-DES/" style="font-size: 10px;">Triple DES</a> <a href="/tags/VirtualBox/" style="font-size: 12.5px;">VirtualBox</a> <a href="/tags/aql/" style="font-size: 10px;">aql</a> <a href="/tags/bashrc/" style="font-size: 10px;">bashrc</a> <a href="/tags/sbt/" style="font-size: 10px;">sbt</a> <a href="/tags/shell-script/" style="font-size: 10px;">shell script</a> <a href="/tags/wercker/" style="font-size: 15px;">wercker</a> <a href="/tags/zshrc/" style="font-size: 10px;">zshrc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">3月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">1月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">12月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">11月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">10月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">8月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">7月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">6月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">5月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">4月 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/06/hyuki-crypt-book-go-3/">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/19/hyuki-crypt-book-go-2/">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/02/hyuki-crypt-book-go-1/">Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/29/value-receiver-pointer-receiver/">Go 言語の値レシーバとポインタレシーバ</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/22/docker-machine-plugin/">Docker Machine v0.5 の Driver Plugins の仕組み</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 skatsuta<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'skatsutagithubio';
+  
+  var disqus_url = 'https://skatsuta.github.io/2015/04/29/shell-script/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62443224-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

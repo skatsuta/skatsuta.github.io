@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode- | Step by Step</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="結城浩さんの『暗号技術入門』を Go 言語を使って学ぶ記事の第3回です。前回は AES について解説しました。 今回は第4章「ブロック暗号のモード」です。そもそも、ブロック暗号の「モード」とは何なのでしょうか。 ブロック暗号の「モード」とは前回の終わりにも書いたように、僕らが暗号化したい平文の長さは、たいていの場合ブロック暗号のブロック長 (AES なら 128 ビット) より長いことが多いです。">
+<meta name="keywords" content="Go,Cryptography,AES,CBC Mode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-">
+<meta property="og:url" content="https://skatsuta.github.io/2016/03/06/hyuki-crypt-book-go-3/index.html">
+<meta property="og:site_name" content="Step by Step">
+<meta property="og:description" content="結城浩さんの『暗号技術入門』を Go 言語を使って学ぶ記事の第3回です。前回は AES について解説しました。 今回は第4章「ブロック暗号のモード」です。そもそも、ブロック暗号の「モード」とは何なのでしょうか。 ブロック暗号の「モード」とは前回の終わりにも書いたように、僕らが暗号化したい平文の長さは、たいていの場合ブロック暗号のブロック長 (AES なら 128 ビット) より長いことが多いです。">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/CBC_encryption.svg/601px-CBC_encryption.svg.png">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/CBC_decryption.svg/601px-CBC_decryption.svg.png">
+<meta property="og:updated_time" content="2018-03-13T08:06:37.811Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-">
+<meta name="twitter:description" content="結城浩さんの『暗号技術入門』を Go 言語を使って学ぶ記事の第3回です。前回は AES について解説しました。 今回は第4章「ブロック暗号のモード」です。そもそも、ブロック暗号の「モード」とは何なのでしょうか。 ブロック暗号の「モード」とは前回の終わりにも書いたように、僕らが暗号化したい平文の長さは、たいていの場合ブロック暗号のブロック長 (AES なら 128 ビット) より長いことが多いです。">
+<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/CBC_encryption.svg/601px-CBC_encryption.svg.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Step by Step" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-62443224-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Step by Step</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">1歩ずつ 確実に 進歩していこう</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.google.com/search" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="q" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="hidden" name="sitesearch" value="skatsuta.github.io">
+          <input type="submit" value="" class="search-form-submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-hyuki-crypt-book-go-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/06/hyuki-crypt-book-go-3/" class="article-date">
+  <time datetime="2016-03-06T09:52:50.000Z" itemprop="datePublished">2016-03-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://amzn.to/1OyCzdb" target="_blank" rel="noopener">結城浩さんの『暗号技術入門』</a>を Go 言語を使って学ぶ記事の第3回です。<a href="http://skatsuta.github.io/2016/01/19/hyuki-crypt-book-go-2/">前回</a>は AES について解説しました。</p>
+<p>今回は<strong>第4章「ブロック暗号のモード」</strong>です。そもそも、ブロック暗号の「モード」とは何なのでしょうか。</p>
+<h1 id="ブロック暗号の「モード」とは"><a href="#ブロック暗号の「モード」とは" class="headerlink" title="ブロック暗号の「モード」とは"></a>ブロック暗号の「モード」とは</h1><p>前回の終わりにも書いたように、僕らが暗号化したい平文の長さは、たいていの場合ブロック暗号のブロック長 (AES なら 128 ビット) より長いことが多いです。そのため、ブロック暗号を<strong>繰り返し</strong>使って、長い文章全体を暗号化する必要があります。このブロック暗号を<strong>繰り返す方法</strong>のことをブロック暗号の<strong>「モード」</strong>と呼びます。</p>
+<p>ブロック暗号のモードにはいくつもの種類がありますが、今回と次回でその中でも比較的使用が推奨されている <strong>CBC モード</strong>と<strong>CTR モード</strong>について説明します。今回は CBC モードについてです。</p>
+<p>なお、この記事中の Go のソースコードのバージョンはすべて 1.6 です。</p>
+<h2 id="Go-におけるブロック暗号モード"><a href="#Go-におけるブロック暗号モード" class="headerlink" title="Go におけるブロック暗号モード"></a>Go におけるブロック暗号モード</h2><p>Go ではブロック暗号のモードはすべて <code>crypto/cipher</code> パッケージに定義されている <code>BlockMode</code> という統一のインターフェースを介して利用するようになっています。 <code>CryptoBlocks()</code> で <code>src</code> のデータを <code>dst</code> に暗号化または復号します。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> BlockMode <span class="keyword">interface</span> &#123;</span><br><span class="line">        <span class="comment">// BlockSize returns the mode's block size.</span></span><br><span class="line">        BlockSize() <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// CryptBlocks encrypts or decrypts a number of blocks. The length of</span></span><br><span class="line">        <span class="comment">// src must be a multiple of the block size. Dst and src may point to</span></span><br><span class="line">        <span class="comment">// the same memory.</span></span><br><span class="line">        CryptBlocks(dst, src []<span class="keyword">byte</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Block</code> インターフェースと違い、 <code>BlockMode</code> インターフェースには <code>CryptBlocks()</code> メソッド1つしかありません。これは、そもそも暗号化と復号で別のオブジェクトを用いる必要があるからです。たとえば、あとで見るように、 CBC モードでの暗号化には <code>NewCBCEncrypter()</code> によるオブジェクトを使って、復号には <code>NewCBCDecrypter()</code> によるオブジェクトを使って <code>CryptBlocks()</code> を呼ぶ必要があります。</p>
+<h1 id="CBC-Cipher-Block-Chaining-モード"><a href="#CBC-Cipher-Block-Chaining-モード" class="headerlink" title="CBC (Cipher Block Chaining) モード"></a>CBC (Cipher Block Chaining) モード</h1><h2 id="CBC-モードとは"><a href="#CBC-モードとは" class="headerlink" title="CBC モードとは"></a>CBC モードとは</h2><p><strong>CBC (Cipher Block Chaining) モードは、1つ前の暗号文ブロックと平文ブロックの内容を混ぜ合わせてから暗号化をおこなう方法</strong>です。暗号文ブロックをチェーンのように連鎖させることが名前の由来になっています。</p>
+<p>では CBC モードの具体的なアルゴリズムを見てみましょう。</p>
+<h2 id="CBC-モードのアルゴリズム"><a href="#CBC-モードのアルゴリズム" class="headerlink" title="CBC モードのアルゴリズム"></a>CBC モードのアルゴリズム</h2><p>以下の図のように、 <strong>CBC モードでは1つ前の暗号文ブロックと平文ブロックの XOR をとってから暗号化をおこないます</strong>。 “block cipher encryption” の中身には、たとえば AES を用いるのであればその処理が入ります。</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/CBC_encryption.svg/601px-CBC_encryption.svg.png" alt="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/CBC_encryption.svg/601px-CBC_encryption.svg.png"></p>
+<p>ただし、最初の平文ブロックを暗号化するときには「1つ前の暗号文ブロック」が存在しません。そこで、その代わりに<strong>「初期化ベクトル (initialization vector; IV)」</strong>というランダムなビット列を用意し、それを用います。</p>
+<p>最終的に、生成される暗号文ブロックをつなげたものが暗号化されたデータになります。</p>
+<p>逆に、復号化は以下の図のようになります。 XOR の対称的な性質により、復号化したブロックと1つ前の暗号文ブロックの XOR を再びとれば、元の平文が得られます。</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/CBC_decryption.svg/601px-CBC_decryption.svg.png" alt="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/CBC_decryption.svg/601px-CBC_decryption.svg.png"></p>
+<h2 id="CBC-モードを使ってみる"><a href="#CBC-モードを使ってみる" class="headerlink" title="CBC モードを使ってみる"></a>CBC モードを使ってみる</h2><p>Go 言語を使い、実際に CBC モードで長い平文を暗号化してみます。ブロック暗号としては AES を使います。</p>
+<p><a href="http://play.golang.org/p/_q54T5eDwe" target="_blank" rel="noopener">http://play.golang.org/p/_q54T5eDwe</a></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"crypto/aes"</span></span><br><span class="line">	<span class="string">"crypto/cipher"</span></span><br><span class="line">	<span class="string">"crypto/rand"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"io"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 平文。長さが 16 バイトの整数倍でない場合はパディングする必要がある</span></span><br><span class="line">	plainText := []<span class="keyword">byte</span>(<span class="string">"secret text 9999"</span>)</span><br><span class="line">	<span class="comment">// 暗号化データ。先頭に初期化ベクトル (IV) を入れるため、1ブロック分余計に確保する</span></span><br><span class="line">	encrypted := <span class="built_in">make</span>([]<span class="keyword">byte</span>, aes.BlockSize+<span class="built_in">len</span>(plainText))</span><br><span class="line"></span><br><span class="line">	<span class="comment">// IV は暗号文の先頭に入れておくことが多い</span></span><br><span class="line">	iv := encrypted[:aes.BlockSize]</span><br><span class="line">	<span class="comment">// IV としてランダムなビット列を生成する</span></span><br><span class="line">	<span class="keyword">if</span> _, err := io.ReadFull(rand.Reader, iv); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// ブロック暗号として AES を使う場合</span></span><br><span class="line">	key := []<span class="keyword">byte</span>(<span class="string">"secret-key-12345"</span>)</span><br><span class="line">	block, err := aes.NewCipher(key)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// CBC モードで暗号化する</span></span><br><span class="line">	mode := cipher.NewCBCEncrypter(block, iv)</span><br><span class="line">	mode.CryptBlocks(encrypted[aes.BlockSize:], plainText)</span><br><span class="line">	fmt.Printf(<span class="string">"encrypted: %x\n"</span>, encrypted)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 復号するには復号化用オブジェクトが別に必要</span></span><br><span class="line">	mode = cipher.NewCBCDecrypter(block, iv)</span><br><span class="line">	decrypted := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="built_in">len</span>(plainText))</span><br><span class="line">	<span class="comment">// 先頭の IV を除いた部分を復号する</span></span><br><span class="line">	mode.CryptBlocks(decrypted, encrypted[aes.BlockSize:])</span><br><span class="line">	fmt.Printf(<span class="string">"decrypted: %s\n"</span>, decrypted)</span><br><span class="line">	<span class="comment">// Output:</span></span><br><span class="line">	<span class="comment">// decrypted: secret text 9999</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>標準ライブラリのみを用いて直接暗号化をおこなおうとすると、結構面倒なことがわかります。実際にはアプリケーションが使いやすいようなラッパー処理を書き、それを用いることになると思います。</p>
+<h2 id="Go-での実装"><a href="#Go-での実装" class="headerlink" title="Go での実装"></a>Go での実装</h2><p>では標準ライブラリの <code>crypto/cipher</code> において、 CBC モードがどのように実装されているのか見てみましょう。</p>
+<p>CBC モードを表すのは以下の <code>cbc</code> 構造体です。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> cbc <span class="keyword">struct</span> &#123;</span><br><span class="line">	b         Block</span><br><span class="line">	blockSize <span class="keyword">int</span></span><br><span class="line">	iv        []<span class="keyword">byte</span></span><br><span class="line">	tmp       []<span class="keyword">byte</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>cbc</code> 構造体のコンストラクタは <code>newCBC()</code> です。書き換えの影響を受けないように、 <code>cbc.iv</code> には引数の <code>iv</code> を完全にコピーしたものが入れられます。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newCBC</span><span class="params">(b Block, iv []<span class="keyword">byte</span>)</span> *<span class="title">cbc</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;cbc&#123;</span><br><span class="line">		b:         b,</span><br><span class="line">		blockSize: b.BlockSize(),</span><br><span class="line">		iv:        dup(iv),</span><br><span class="line">		tmp:       <span class="built_in">make</span>([]<span class="keyword">byte</span>, b.BlockSize()),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>cbc</code> 構造体は直接 <code>BlockMode</code> インターフェースを実装してわけではありません。実際はそのエイリアスの <code>cbcEncrypter</code> / <code>cbcDecrypter</code> 型が暗号化 / 復号処理を実装しています。同じ構造体に複数の別名型をつけ、それぞれで違うメソッドを実装するというのは、参考になる実装方法ですね。</p>
+<p>暗号化用オブジェクトは <code>NewCBCEncrypter()</code> で生成します。この戻り値が <code>BlockMode</code> インターフェースを実装した <code>cbcEncrypter</code> オブジェクトになります。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> cbcEncrypter cbc</span><br><span class="line"></span><br><span class="line"><span class="comment">// NewCBCEncrypter returns a BlockMode which encrypts in cipher block chaining</span></span><br><span class="line"><span class="comment">// mode, using the given Block. The length of iv must be the same as the</span></span><br><span class="line"><span class="comment">// Block's block size.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewCBCEncrypter</span><span class="params">(b Block, iv []<span class="keyword">byte</span>)</span> <span class="title">BlockMode</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(iv) != b.BlockSize() &#123;</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"cipher.NewCBCEncrypter: IV length must equal block size"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> (*cbcEncrypter)(newCBC(b, iv))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>では、 <code>cbcEncrypter</code> の <code>CryptBlocks()</code> メソッドの実装を見てみましょう。やっているのは先に説明したアルゴリズム通り、平文ブロック (<code>src[:x.BlockSize]</code>) と1つ前の暗号文ブロック (<code>iv</code>) の XOR をとり (<code>xorBytes()</code>)、それを暗号化する (<code>x.b.Encrypt()</code>) ことです。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x *cbcEncrypter)</span> <span class="title">CryptBlocks</span><span class="params">(dst, src []<span class="keyword">byte</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(src)%x.blockSize != <span class="number">0</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"crypto/cipher: input not full blocks"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(dst) &lt; <span class="built_in">len</span>(src) &#123;</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"crypto/cipher: output smaller than input"</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	iv := x.iv</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> <span class="built_in">len</span>(src) &gt; <span class="number">0</span> &#123;</span><br><span class="line">		<span class="comment">// Write the xor to dst, then encrypt in place.</span></span><br><span class="line">		xorBytes(dst[:x.blockSize], src[:x.blockSize], iv)</span><br><span class="line">		x.b.Encrypt(dst[:x.blockSize], dst[:x.blockSize])</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Move to the next block with this block as the next iv.</span></span><br><span class="line">		iv = dst[:x.blockSize]</span><br><span class="line">		src = src[x.blockSize:]</span><br><span class="line">		dst = dst[x.blockSize:]</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Save the iv for the next CryptBlocks call.</span></span><br><span class="line">	<span class="built_in">copy</span>(x.iv, iv)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一方、復号用オブジェクトは <code>NewCBCDecrypter()</code> で生成します。この戻り値が <code>BlockMode</code> インターフェースを実装した <code>cbcDecrypter</code> オブジェクトになります。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> cbcDecrypter cbc</span><br><span class="line"></span><br><span class="line"><span class="comment">// NewCBCDecrypter returns a BlockMode which decrypts in cipher block chaining</span></span><br><span class="line"><span class="comment">// mode, using the given Block. The length of iv must be the same as the</span></span><br><span class="line"><span class="comment">// Block's block size and must match the iv used to encrypt the data.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewCBCDecrypter</span><span class="params">(b Block, iv []<span class="keyword">byte</span>)</span> <span class="title">BlockMode</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(iv) != b.BlockSize() &#123;</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"cipher.NewCBCDecrypter: IV length must equal block size"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> (*cbcDecrypter)(newCBC(b, iv))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>続いて <code>cbcDecrypter</code> の <code>CryptBlocks()</code> メソッドの実装を見てみます。 <code>To avoid making a copy each time, we loop over the blocks BACKWARDS.</code> というコメントがある通り、復号処理は暗号文の末尾から逆順でおこなっているようです。しかしながら、「コピーを防ぐため」ということの意図はよくわかりませんでした。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x *cbcDecrypter)</span> <span class="title">CryptBlocks</span><span class="params">(dst, src []<span class="keyword">byte</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(src)%x.blockSize != <span class="number">0</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"crypto/cipher: input not full blocks"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(dst) &lt; <span class="built_in">len</span>(src) &#123;</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">"crypto/cipher: output smaller than input"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(src) == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// For each block, we need to xor the decrypted data with the previous block's ciphertext (the iv).</span></span><br><span class="line">	<span class="comment">// To avoid making a copy each time, we loop over the blocks BACKWARDS.</span></span><br><span class="line">	end := <span class="built_in">len</span>(src)</span><br><span class="line">	start := end - x.blockSize</span><br><span class="line">	prev := start - x.blockSize</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Copy the last block of ciphertext in preparation as the new iv.</span></span><br><span class="line">	<span class="built_in">copy</span>(x.tmp, src[start:end])</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Loop over all but the first block.</span></span><br><span class="line">	<span class="keyword">for</span> start &gt; <span class="number">0</span> &#123;</span><br><span class="line">		x.b.Decrypt(dst[start:end], src[start:end])</span><br><span class="line">		xorBytes(dst[start:end], dst[start:end], src[prev:start])</span><br><span class="line"></span><br><span class="line">		end = start</span><br><span class="line">		start = prev</span><br><span class="line">		prev -= x.blockSize</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// The first block is special because it uses the saved iv.</span></span><br><span class="line">	x.b.Decrypt(dst[start:end], src[start:end])</span><br><span class="line">	xorBytes(dst[start:end], dst[start:end], x.iv)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Set the new iv to the first block we copied earlier.</span></span><br><span class="line">	x.iv, x.tmp = x.tmp, x.iv</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CBC モードについては以上です。次回はブロック暗号でよく使われるもう1つのモード、 CTR モードについて書く予定です。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2016/03/06/hyuki-crypt-book-go-3/" data-id="cjepfn0o7000iurcqk15zkdw1" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2016/03/06/hyuki-crypt-book-go-3/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AES/">AES</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cryptography/">Cryptography</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/">Go</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/01/19/hyuki-crypt-book-go-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Aerospike/">Aerospike</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Amazon-EC2/">Amazon EC2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/">Ant</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boot2Docker/">Boot2Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CLI/">CLI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cryptography/">Cryptography</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DES/">DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Machine/">Docker Machine</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Remote-API/">Docker Remote API</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Driver-Plugins/">Driver Plugins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPie/">HTTPie</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVS/">KVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/">Maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Play-Framework/">Play Framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rijndael/">Rijndael</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ruby/">Ruby</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RubyGems/">RubyGems</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Triple-DES/">Triple DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/">VirtualBox</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aql/">aql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bashrc/">bashrc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sbt/">sbt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-script/">shell script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wercker/">wercker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zshrc/">zshrc</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 12.5px;">AES</a> <a href="/tags/Aerospike/" style="font-size: 12.5px;">Aerospike</a> <a href="/tags/Amazon-EC2/" style="font-size: 10px;">Amazon EC2</a> <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/Ant/" style="font-size: 10px;">Ant</a> <a href="/tags/Boot2Docker/" style="font-size: 10px;">Boot2Docker</a> <a href="/tags/CBC-Mode/" style="font-size: 10px;">CBC Mode</a> <a href="/tags/CLI/" style="font-size: 10px;">CLI</a> <a href="/tags/Cryptography/" style="font-size: 15px;">Cryptography</a> <a href="/tags/DES/" style="font-size: 10px;">DES</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Docker-Machine/" style="font-size: 15px;">Docker Machine</a> <a href="/tags/Docker-Remote-API/" style="font-size: 10px;">Docker Remote API</a> <a href="/tags/Driver-Plugins/" style="font-size: 10px;">Driver Plugins</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Go/" style="font-size: 20px;">Go</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/HTTPie/" style="font-size: 10px;">HTTPie</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/KVS/" style="font-size: 10px;">KVS</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Play-Framework/" style="font-size: 10px;">Play Framework</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/Rijndael/" style="font-size: 10px;">Rijndael</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/RubyGems/" style="font-size: 10px;">RubyGems</a> <a href="/tags/Scala/" style="font-size: 10px;">Scala</a> <a href="/tags/Triple-DES/" style="font-size: 10px;">Triple DES</a> <a href="/tags/VirtualBox/" style="font-size: 12.5px;">VirtualBox</a> <a href="/tags/aql/" style="font-size: 10px;">aql</a> <a href="/tags/bashrc/" style="font-size: 10px;">bashrc</a> <a href="/tags/sbt/" style="font-size: 10px;">sbt</a> <a href="/tags/shell-script/" style="font-size: 10px;">shell script</a> <a href="/tags/wercker/" style="font-size: 15px;">wercker</a> <a href="/tags/zshrc/" style="font-size: 10px;">zshrc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">3月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">1月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">12月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">11月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">10月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">8月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">7月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">6月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">5月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">4月 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/06/hyuki-crypt-book-go-3/">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/19/hyuki-crypt-book-go-2/">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/02/hyuki-crypt-book-go-1/">Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/29/value-receiver-pointer-receiver/">Go 言語の値レシーバとポインタレシーバ</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/22/docker-machine-plugin/">Docker Machine v0.5 の Driver Plugins の仕組み</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 skatsuta<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'skatsutagithubio';
+  
+  var disqus_url = 'https://skatsuta.github.io/2016/03/06/hyuki-crypt-book-go-3/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62443224-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

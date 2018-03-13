@@ -1,0 +1,840 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Step by Step</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Step by Step">
+<meta property="og:url" content="https://skatsuta.github.io/page/2/index.html">
+<meta property="og:site_name" content="Step by Step">
+<meta property="og:locale" content="ja-JP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Step by Step">
+  
+    <link rel="alternative" href="/atom.xml" title="Step by Step" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-62443224-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Step by Step</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">1歩ずつ 確実に 進歩していこう</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.google.com/search" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="q" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="hidden" name="sitesearch" value="skatsuta.github.io">
+          <input type="submit" value="" class="search-form-submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main">
+  
+    <article id="post-go-1-5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/07/28/go-1-5/" class="article-date">
+  <time datetime="2015-07-28T01:45:13.000Z" itemprop="datePublished">2015-07-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/28/go-1-5/">Go 1.5 の変更点</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>間もなく Go 1.5 がリリースされるようなので、 release notes の原稿から気になる変更点をピックアップしてみました。</p>
+<h2 id="言語仕様"><a href="#言語仕様" class="headerlink" title="言語仕様"></a>言語仕様</h2><h3 id="構造体をキーとした-map-リテラルの簡略化"><a href="#構造体をキーとした-map-リテラルの簡略化" class="headerlink" title="構造体をキーとした map リテラルの簡略化"></a>構造体をキーとした map リテラルの簡略化</h3><p>構造体をキーとした map のリテラルを少し簡単に書けるようになります。たとえば、これまでは</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">m := <span class="keyword">map</span>[Point]<span class="keyword">string</span>&#123;</span><br><span class="line">    Point&#123;<span class="number">29.935523</span>, <span class="number">52.891566</span>&#125;:   <span class="string">"Persepolis"</span>,</span><br><span class="line">    Point&#123;<span class="number">-25.352594</span>, <span class="number">131.034361</span>&#125;: <span class="string">"Uluru"</span>,</span><br><span class="line">    Point&#123;<span class="number">37.422455</span>, <span class="number">-122.084306</span>&#125;: <span class="string">"Googleplex"</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>と書いていたものが、</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">m := <span class="keyword">map</span>[Point]<span class="keyword">string</span>&#123;</span><br><span class="line">    &#123;<span class="number">29.935523</span>, <span class="number">52.891566</span>&#125;:   <span class="string">"Persepolis"</span>,</span><br><span class="line">    &#123;<span class="number">-25.352594</span>, <span class="number">131.034361</span>&#125;: <span class="string">"Uluru"</span>,</span><br><span class="line">    &#123;<span class="number">37.422455</span>, <span class="number">-122.084306</span>&#125;: <span class="string">"Googleplex"</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>と書けるようになります。</p>
+<h2 id="実装"><a href="#実装" class="headerlink" title="実装"></a>実装</h2><h3 id="C-のソースコードの削除"><a href="#C-のソースコードの削除" class="headerlink" title="C のソースコードの削除"></a>C のソースコードの削除</h3><p>コンパイラとランタイムがすべて Go で書き換えられ、C のコードは排除されました。</p>
+<h3 id="ガベージコレクタ"><a href="#ガベージコレクタ" class="headerlink" title="ガベージコレクタ"></a>ガベージコレクタ</h3><p>GC 処理のアルゴリズム改善・スケジューリング改善・並列化により、レイテンシが劇的に小さくなります。アプリケーションの動きが完全に停止する “stop the world” の時間はほとんどの場合 10 ミリ秒以下に抑えられるようです。</p>
+<h3 id="ランタイム"><a href="#ランタイム" class="headerlink" title="ランタイム"></a>ランタイム</h3><p><code>GOMAXPROCS</code> のデフォルト値が 1 からコア数になります。シングルスレッド前提で書かれているプログラムにはもしかすると影響が出るかもしれません。</p>
+<h2 id="ポート"><a href="#ポート" class="headerlink" title="ポート"></a>ポート</h2><p><code>darwin/arm</code>, <code>darwin/arm64</code> (iOS) と <code>linux/arm64</code> がサポートされました。</p>
+<h2 id="ツール"><a href="#ツール" class="headerlink" title="ツール"></a>ツール</h2><h3 id="コンパイラ・リンカ"><a href="#コンパイラ・リンカ" class="headerlink" title="コンパイラ・リンカ"></a>コンパイラ・リンカ</h3><p><code>6g</code>, <code>8g</code> などのコンパイラ・リンカはなくなり、<code>go tool compile</code>, <code>go tool link</code> などに置き換えられました。</p>
+<h3 id="新たなデフォルトコマンドの追加"><a href="#新たなデフォルトコマンドの追加" class="headerlink" title="新たなデフォルトコマンドの追加"></a>新たなデフォルトコマンドの追加</h3><p><code>go vet</code>, <code>go cover</code>, <code>go doc</code> コマンドが標準で使えるようになりました。</p>
+<ul>
+<li><code>vet</code> はソースコードのバリデーションや静的解析をおこなうツールです。</li>
+<li><code>cover</code> はカバレッジを計算してくれるツールです。</li>
+</ul>
+<p><code>vet</code> や <code>cover</code> はよく使っているので、標準で同梱されるようになると嬉しいですね。</p>
+<h3 id="Go-コマンド"><a href="#Go-コマンド" class="headerlink" title="Go コマンド"></a>Go コマンド</h3><h4 id="Internal-package"><a href="#Internal-package" class="headerlink" title="Internal package"></a>Internal package</h4><p>Go でのアクセス制御はこれまで public か private しか指定できませんでした。 Go 1.4 で <strong>internal package</strong> という、パッケージプライベートを実現する機能が試験的に導入されましたが、この段階ではまだコアライブラリでしか利用できるようになっていませんでした。 Go 1.5 でこの機能がユーザライブラリにも開放されます。</p>
+<p>具体的には、パッケージ名に <code>internal</code> が含まれている場合、同一のルートパッケージからのみ import できます。たとえば、 <code>$GOPATH/src/mypkg/internal/foo</code> というパッケージは、 <code>$GOPATH/src/mypkg</code> からのみ import できます。</p>
+<p>細かい仕様は<a href="https://docs.google.com/document/d/1e8kOo3r51b2BWtTs_1uADIA5djfXhPT36s6eHVRIvaU/edit" target="_blank" rel="noopener">デザインドキュメント</a>に記載されています。<a href="http://qiita.com/taka011239@github/items/5735a1ec78bad06f5485" target="_blank" rel="noopener">go1.4で追加されたinternal packageについて - Qiita</a> の記事なども参考になります。</p>
+<h4 id="Verdoring"><a href="#Verdoring" class="headerlink" title="Verdoring"></a>Verdoring</h4><p>Verdoring 機能が実験的にサポートされました。これはどういうものかというと、たとえば</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$GOPATH</span><br><span class="line">|    src/</span><br><span class="line">|    |    github.com/constabulary/example-gsftp/</span><br><span class="line">|    |    |    cmd/</span><br><span class="line">|    |    |    |    gsftp/</span><br><span class="line">|    |    |    |    |    main.go</span><br><span class="line">|    |    |    vendor/</span><br><span class="line">|    |    |    |    github.com/pkg/sftp/</span><br><span class="line">|    |    |    |    golang.org/x/crypto/ssh/</span><br><span class="line">|    |    |    |    |    agent/</span><br></pre></td></tr></table></figure>
+<p>というリポジトリ構成にしておくと、 <code>github.com/constabulary/example-gsftp/cmd/gsftp/main.go</code> において</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">"golang.org/x/crypto/ssh"</span></span><br><span class="line">    <span class="string">"golang.org/x/crypto/ssh/agent"</span></span><br><span class="line">    <span class="string">"github.com/pkg/sftp"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>と書けば <code>verdor</code> 以下の依存ライブラリを import できるようになります。 これまでは</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">"github.com/constabulary/example-gsftp/vendor/golang.org/x/crypto/ssh"</span></span><br><span class="line">    <span class="string">"github.com/constabulary/example-gsftp/vendor/golang.org/x/crypto/ssh/agent"</span></span><br><span class="line">    <span class="string">"github.com/constabulary/example-gsftp/vendor/github.com/pkg/sftp"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>というふうにフルパスを書かなければならなかったので、だいぶ楽になります。</p>
+<p>ただしこの機能を有効にするには環境変数で <code>GO15VENDOREXPERIMENT=1</code> と設定する必要があります。</p>
+<p>これまで Go にはライブラリのバージョン指定機能がなかったため、たとえば依存関係解決ツールである <a href="https://github.com/tools/godep" target="_blank" rel="noopener">Godep</a> では <code>Godep/_workspace/</code> で同じような機構を実現していました。 Go 1.5 からはこの標準機能を使っていくことになるでしょう。</p>
+<h2 id="標準ライブラリ"><a href="#標準ライブラリ" class="headerlink" title="標準ライブラリ"></a>標準ライブラリ</h2><h3 id="flag-パッケージ"><a href="#flag-パッケージ" class="headerlink" title="flag パッケージ"></a><code>flag</code> パッケージ</h3><p><code>flag</code> パッケージの help の表示が見やすくなりました。たとえば</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpuFlag = flag.Int(<span class="string">"cpu"</span>, <span class="number">1</span>, <span class="string">"run `N` processes in parallel"</span>)</span><br></pre></td></tr></table></figure>
+<p>というフラグを定義すると、 <code>help</code> メッセージは</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-cpu N</span><br><span class="line">        run N processes in parallel (default 1)</span><br></pre></td></tr></table></figure>
+<p>と表示されるようになります。 Go 1.4 までは</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-cpu=1  run N processes in parallel</span><br></pre></td></tr></table></figure>
+<p>という表示だったので、少し見やすくなります。</p>
+<h3 id="math-big-パッケージ"><a href="#math-big-パッケージ" class="headerlink" title="math/big パッケージ"></a><code>math/big</code> パッケージ</h3><p><code>math/big</code> パッケージに、任意精度の浮動小数点型である <code>Float</code> が追加されます。</p>
+<h3 id="reflect-パッケージ"><a href="#reflect-パッケージ" class="headerlink" title="reflect パッケージ"></a><code>reflect</code> パッケージ</h3><p><code>reflect</code> パッケージに <code>ArrayOf</code> と <code>FuncOf</code> 関数が追加されます。 <code>SliceOf</code> と同様に、実行時に配列や関数を表す型をつくることができるようになります。</p>
+<h2 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h2><p>個人的な見どころはやはり GC の改善と internal package ですね。正式リリースが待ち遠しいです。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/07/28/go-1-5/" data-id="cjepfn0nx0008urcqq0tpvi9l" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/07/28/go-1-5/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/">Go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wercker-aerospike" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/07/22/wercker-aerospike/" class="article-date">
+  <time datetime="2015-07-22T05:35:57.000Z" itemprop="datePublished">2015-07-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/22/wercker-aerospike/">wercker 上で Aerospike を使ったテストをする</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://blog.wercker.com/2015/04/02/Introducing-our-docker-stack.html" target="_blank" rel="noopener">wercker が最近 Docker に対応しました。</a> これにより、 Docker を利用している場合にはテストからデプロイまでを共通したコンテナでおこなえるほか、既存のコンテナを再利用し、柔軟に組み合わせて利用できるようになりました。</p>
+<p>最近 <a href="http://www.aerospike.com" target="_blank" rel="noopener">Aerospike</a> という超優秀な KVS を利用しているのですが、 Docker ベースになった werkcer 上でこのクライアントライブラリのユニットテストを実行したいと思ったので試してみました。</p>
+<p>werker には <a href="http://devcenter.wercker.com/docs/services/index.html" target="_blank" rel="noopener">services</a> という、 複数のコンテナを外部サービスとして利用する仕組みがあります。この機構により、使用するミドルウェアのコンテナイメージを用意すれば、 CI 時にそれを利用したテストを走らせることができます。素晴らしい仕組みです。たとえば、 Redis を使用したければ、<code>wercker.yml</code> の <code>services</code> セクションに以下のように <code>redis</code> を追記します。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">redis</span></span><br></pre></td></tr></table></figure>
+<p>これにより、 CI 時に Docker Hub の Redis イメージが pull されてきて、 アプリケーションから利用できるようになります。 Aerospike を使う場合も同様で、 <code>wercker.yml</code> に以下のように書きます。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">aerospike</span></span><br></pre></td></tr></table></figure>
+<p>こうすると、ビルド時に Docker Hub の <a href="https://registry.hub.docker.com/_/aerospike/" target="_blank" rel="noopener">aerospike</a> リポジトリからイメージを取得して、利用できるようにしてくれます。</p>
+<p>では、アプリケーション側からこれらのサービスにアクセスするにはどうすればよいのでしょうか？<br>wercker では <a href="https://docs.docker.com/userguide/dockerlinks/#environment-variables" target="_blank" rel="noopener">Docker のコンテナ間リンク機構</a> を利用して、 <a href="http://devcenter.wercker.com/docs/services/available-env-vars.html" target="_blank" rel="noopener">環境変数が自動で準備されるようになってます</a>。 Aerospike を使用した場合には、以下のような環境変数が用意されることになります。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">AEROSPIKE_ENV_AEROSPIKE_SHA256=df810e67d363291f6f40c046564bbc7ab775fcdb45ebfb878368361705063015</span><br><span class="line">AEROSPIKE_ENV_AEROSPIKE_VERSION=3.5.14</span><br><span class="line">AEROSPIKE_NAME=/wercker-pipeline-55ae303ff32b86a92907041f/aerospike</span><br><span class="line">AEROSPIKE_PORT=tcp://172.17.6.203:3000</span><br><span class="line">AEROSPIKE_PORT_3000_TCP=tcp://172.17.6.203:3000</span><br><span class="line">AEROSPIKE_PORT_3000_TCP_ADDR=172.17.6.203</span><br><span class="line">AEROSPIKE_PORT_3000_TCP_END=tcp://172.17.6.203:3003</span><br><span class="line">AEROSPIKE_PORT_3000_TCP_PORT=3000</span><br><span class="line">AEROSPIKE_PORT_3000_TCP_PORT_END=3003</span><br><span class="line">AEROSPIKE_PORT_3000_TCP_PORT_START=3000</span><br><span class="line">AEROSPIKE_PORT_3000_TCP_PROTO=tcp</span><br><span class="line">AEROSPIKE_PORT_3000_TCP_START=tcp://172.17.6.203:3000</span><br><span class="line">AEROSPIKE_PORT_3001_TCP=tcp://172.17.6.203:3001</span><br><span class="line">AEROSPIKE_PORT_3001_TCP_ADDR=172.17.6.203</span><br><span class="line">AEROSPIKE_PORT_3001_TCP_PORT=3001</span><br><span class="line">AEROSPIKE_PORT_3001_TCP_PROTO=tcp</span><br><span class="line">AEROSPIKE_PORT_3002_TCP=tcp://172.17.6.203:3002</span><br><span class="line">AEROSPIKE_PORT_3002_TCP_ADDR=172.17.6.203</span><br><span class="line">AEROSPIKE_PORT_3002_TCP_PORT=3002</span><br><span class="line">AEROSPIKE_PORT_3002_TCP_PROTO=tcp</span><br><span class="line">AEROSPIKE_PORT_3003_TCP=tcp://172.17.6.203:3003</span><br><span class="line">AEROSPIKE_PORT_3003_TCP_ADDR=172.17.6.203</span><br><span class="line">AEROSPIKE_PORT_3003_TCP_PORT=3003</span><br><span class="line">AEROSPIKE_PORT_3003_TCP_PROTO=tcp</span><br></pre></td></tr></table></figure>
+<p><a href="https://docs.docker.com/userguide/dockerlinks/" target="_blank" rel="noopener">ドキュメント</a> にある通り、環境変数の命名規則は</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;name&gt;_PORT_&lt;port&gt;_&lt;protocol&gt;</span><br></pre></td></tr></table></figure>
+<p>をプレフィックスとして、 <code>prefix_ADDR</code> なら IP アドレス、 <code>prefix_PORT</code> ならポート番号、 <code>prefix_PROTO</code> ならプロトコル名になっています。なおかつ、<a href="https://registry.hub.docker.com/u/aerospike/aerospike-server/dockerfile/" target="_blank" rel="noopener">Aerospike の Dockerfile</a> が実行されるので、 3000 ~ 3003 番のポートに対応する環境変数がそれぞれ用意されていますね。</p>
+<p>したがって、あとはアプリケーション側が環境変数から必要な値を取得するような実装になっていればよいことになります。たとえば Go 言語であれば、 以下のように <code>os.Getenv()</code> を使えばよいでしょう。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addr := os.Getenv(<span class="string">"AEROSPIKE_PORT_3000_TCP_ADDR"</span>)</span><br></pre></td></tr></table></figure>
+<p>これで、 DB などの外部サービスに依存したテストも wercker 上で実行できるようになりました！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/07/22/wercker-aerospike/" data-id="cjepfn0of000purcq0oxpx0rp" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/07/22/wercker-aerospike/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Aerospike/">Aerospike</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wercker/">wercker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-wercker-github-login" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/07/21/wercker-github-login/" class="article-date">
+  <time datetime="2015-07-21T07:29:35.000Z" itemprop="datePublished">2015-07-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/21/wercker-github-login/">GitHub アカウントを使っている場合に wercker CLI で認証を通す方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>先進的な CI サービスである <a href="http://wercker.com" target="_blank" rel="noopener">wercker</a> では、 <a href="http://wercker.com/downloads" target="_blank" rel="noopener">CLI が提供されています</a>。これを使うと、 wercker でのビルドプロセスをローカルで再現できたり、 ビルド済みのコンテナを pull してきて、中の状態を確認できたりします。 OS X 用と Linux 用が提供されており、 OS X の場合には、以下のコマンドで一発です。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://s3.amazonaws.com/downloads.wercker.com/cli/stable/darwin_amd64/wercker -o /usr/<span class="built_in">local</span>/bin/wercker</span><br></pre></td></tr></table></figure>
+<p>この <code>wercker</code> コマンドを使ってコンテナイメージを pull してくるには、あらかじめ <code>wercker login</code> で wercker のアカウントでログインしておく必要があります。そうでないと、以下のようなメッセージが表示されてしまいます。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ wercker pull skatsuta/aerospike-sample --branch master --load</span><br><span class="line">Fetching build information <span class="keyword">for</span> application skatsuta/aerospike-sample</span><br><span class="line">ERROR wercker-api: You are not authorized to access the resource (status code: 401)</span><br></pre></td></tr></table></figure>
+<p>ところが僕は GitHub のアカウントを使っており、このログイン情報では次のように認証が通りません。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ wercker login</span><br><span class="line"><span class="comment">########### Logging into wercker! #############</span></span><br><span class="line">Username: skatsuta</span><br><span class="line">Password:</span><br><span class="line">ERROR Unable to <span class="built_in">log</span> into wercker Error=Invalid credentials</span><br><span class="line">ERROR Invalid credentials</span><br></pre></td></tr></table></figure>
+<p>どうなってるのかと思い <a href="https://github.com/wercker/wercker-cli" target="_blank" rel="noopener">wercker/wercker-cli</a> リポジトリの issues を見てみると、以下のような issue が挙げられていました。</p>
+<ul>
+<li><a href="httpsc//github.com/wercker/wercker-cli/issues/15">Issue #15: wercker login ends with “A valid token is required!”</a></li>
+<li><a href="https://github.com/wercker/wercker-cli/issues/16" target="_blank" rel="noopener">Issue #16: Login with Github account?</a></li>
+</ul>
+<p>案の定 GitHub アカウントでのログインには未対応のようです。しかしながら、 <a href="httpsc//github.com/wercker/wercker-cli/issues/15">Issue #15</a> の <a href="https://github.com/captn3m0" target="_blank" rel="noopener">@captn3m0</a> のコメントに興味深いことが書かれていました。</p>
+<blockquote>
+<p>Alternatively, you can add instructions to directly generate a token and putting it in the ~/.werkcer/token file</p>
+</blockquote>
+<p>なんと、トークンファイルを置いておけばいけると!?<br>ということで、早速試してみました。</p>
+<p>wercker のアカウントページの右上のアイコンから Settings &gt; Personal tokens をたどり、 <code>wercker-cli</code> という名前でトークンを生成し、コピーします。そしてそれを <code>~/.wercker/token</code> ファイルに貼り付けて保存します。</p>
+<p>さて、もう一度 pull してみましょう。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ wercker pull skatsuta/aerospike-sample --branch master --load</span><br><span class="line">Fetching build information <span class="keyword">for</span> application skatsuta/aerospike-sample</span><br><span class="line">Downloading Docker repository <span class="keyword">for</span> build 55a3aaad50dc24ba7b102720</span><br><span class="line">Downloading: 100%</span><br><span class="line">Download complete</span><br><span class="line">Importing into Docker</span><br><span class="line">Finished importing into Docker</span><br></pre></td></tr></table></figure>
+<p>本当に成功しました！ これで wercker CLI を活用できますね。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/07/21/wercker-github-login/" data-id="cjepfn0pc0037urcq2rqneym7" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/07/21/wercker-github-login/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CLI/">CLI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wercker/">wercker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java-werkcer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/06/07/java-werkcer/" class="article-date">
+  <time datetime="2015-06-07T08:52:34.000Z" itemprop="datePublished">2015-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/06/07/java-werkcer/">wercker 上で Java / Scala プロジェクトの依存ライブラリをキャッシュする</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://wercker.com" target="_blank" rel="noopener">wercker</a> は今ある CI サービスの中ではもっともイケてるものだと思います。 box と step という仕組みにより、ビルドをおこなう環境とビルド処理を分離し、再利用性を高めています。<a href="http://blog.wercker.com/2015/04/02/Introducing-our-docker-stack.html" target="_blank" rel="noopener">最近 Docker にも対応したようです</a>。まだ Beta 期間中のため、プライベートリポジトリも無料で利用できます。</p>
+<p>最近、 <a href="https://www.playframework.com/" target="_blank" rel="noopener">Play Framework</a> を使ったプロジェクトの開発でこの wercker を使用してみたのですが、試しにビルドしてみたら何と<strong>2回め以降のビルドでも毎回依存ライブラリをすべてダウンロードしているではないですか!!!</strong></p>
+<p>これは困った…どうにかならないもんか…と思ってやってみたのがこの記事です。</p>
+<p>僕が今回取り組んだのが <a href="https://www.playframework.com/" target="_blank" rel="noopener">Play Framework</a> を使ったプロジェクトだったため、それを題材に書きますが、本質的には Ant だろうと Maven だろうと Gradle だろうと sbt だろうと、もっと言えば Java / Scala に限らずどの言語のプロジェクトでも同じようにできるはずです。ぶっちゃけた話、単に rsync を使って自力でキャッシュを保存/復元しているだけですので。</p>
+<h2 id="キャッシュのためのディレクティブがない-wercker"><a href="#キャッシュのためのディレクティブがない-wercker" class="headerlink" title="キャッシュのためのディレクティブがない wercker"></a>キャッシュのためのディレクティブがない wercker</h2><p>メジャーな CI サービスにはキャッシュを制御するディレクティブが用意されているものもあります。<br>たとえば <a href="https://travis-ci.org/" target="_blank" rel="noopener">Travis CI</a> では</p>
+<h5 id="travis-yml"><a href="#travis-yml" class="headerlink" title=".travis.yml"></a>.travis.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cache:</span></span><br><span class="line"><span class="attr">  directories:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">vendor/bundle</span></span><br></pre></td></tr></table></figure>
+<p>と書いておけば <code>vendor/bundle</code> がキャッシュされます。<br><a href="https://circleci.com/" target="_blank" rel="noopener">CircleCI</a> は至れり尽くせりで、 Java / Scala のプロジェクトの場合には</p>
+<ul>
+<li><code>~/.m2</code></li>
+<li><code>~/.ivy2</code></li>
+<li><code>~/.gradle</code></li>
+<li><code>~/.play</code></li>
+</ul>
+<p>を自動で（暗黙的に）キャッシュしてくれますし、明示的にキャッシュしたいものは</p>
+<h5 id="circle-yml"><a href="#circle-yml" class="headerlink" title="circle.yml"></a>circle.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dependencies:</span></span><br><span class="line"><span class="attr">  cache_directories:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">~/.sbt</span></span><br></pre></td></tr></table></figure>
+<p>のように書いておけば <code>~/.sbt</code> がキャッシュされます。</p>
+<p>一方 wercker はまだ若いサービスのためか、上記のようなキャッシュ機構がきちんと整っておらず、今のところ用意されているのは環境変数 <strong><code>$WERCKER_CACHE_DIR</code></strong> のみのようです (少なくとも僕が探した限りは見つかりませんでした)。</p>
+<p>ビルドのたびに依存ライブラリを1からダウンロードされてはたまったもんじゃないので、何とかキャッシュの仕組みを作れないかとやってみました。</p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p>以下の wercker の公式ブログの記事を参考にさせていただきました。</p>
+<ul>
+<li><a href="http://blog.wercker.com/2013/07/25/improving-Go-build-time-with-wercker-cache.html" target="_blank" rel="noopener">Improving golang build times with the wercker cache</a></li>
+</ul>
+<p>上記記事では Go のプロジェクトにおいて、 <code>go get</code> してきた依存ライブラリを rsync を使って <code>$WERCKER_CACHE_DIR</code> に保存したりそこから復元したりして、 ビルド時間を短縮しています。<br>Java や Scala のプロジェクトでも考え方は同じなので、上記記事を参考にして自分なりのやり方を組み立てました。</p>
+<h2 id="要は何をすればよいか"><a href="#要は何をすればよいか" class="headerlink" title="要は何をすればよいか"></a>要は何をすればよいか</h2><ol>
+<li>ビルドステップの最初に <code>$WERCKER_CACHE_DIR</code> からキャッシュを復元する</li>
+<li>ビルドステップの最後に <code>$WERCKER_CACHE_DIR</code> にキャッシュを保存する</li>
+</ol>
+<p>要はこれだけなのですが、</p>
+<ul>
+<li>キャッシュの保存に rsync を使うために、 rsync をインストールした box を作った</li>
+<li>キャッシュの保存/復元作業をまとめたシェルスクリプトを書いた</li>
+</ul>
+<p>ということをしたので、ちょっと手間暇をかけました。</p>
+<h2 id="rsync-をインストールした-box-をつくる"><a href="#rsync-をインストールした-box-をつくる" class="headerlink" title="rsync をインストールした box をつくる"></a>rsync をインストールした box をつくる</h2><p>キャッシュの保存/復元は <code>cp</code> コマンドとかでもいいのでしょうが、<a href="http://blog.wercker.com/2013/07/25/improving-Go-build-time-with-wercker-cache.html" target="_blank" rel="noopener">先の記事</a>でも rsync を使っていましたし、確かに効率を考えると rsync がよさそうです。しかしビルドのたびに rsync をインストールするのも無駄です。そこで、 wercker にはせっかく box という素晴らしい仕組みがあるので、あらかじめ rsync をインストールした box をつくり、それを利用することにしました。</p>
+<p>ありがたいことに、 Java 8 と <a href="http://www.typesafe.com/get-started" target="_blank" rel="noopener">Typesafe Activator</a> をインストールした <a href="https://github.com/mitsuse/wercker-box-activator" target="_blank" rel="noopener">mitsuse/wercker-box-activator</a> という box がすでにありましたので、 fork させていただき、 rsync をインストールする処理を追記しました。</p>
+<ul>
+<li>GitHub repository: <a href="https://github.com/skatsuta/wercker-box-activator" target="_blank" rel="noopener">skatsuta/wercker-box-activator</a></li>
+<li>wercker registory: <a href="https://app.wercker.com/#applications/5561de99be632a8c75080ae9/tab/details" target="_blank" rel="noopener">skatsuta/wercker-box-activator</a></li>
+</ul>
+<h2 id="キャッシュ処理用のシェルスクリプトを書く"><a href="#キャッシュ処理用のシェルスクリプトを書く" class="headerlink" title="キャッシュ処理用のシェルスクリプトを書く"></a>キャッシュ処理用のシェルスクリプトを書く</h2><p>簡単な処理であれば wercker.yml に直接書いてしまえばよいのですが、キャッシュ処理が長くなりそうだったので、シェルスクリプトにまとめることにしました。<br>以下は Play Framework の例です。 Play Framework ではキャッシュディレクトリは <code>~/.ivy2</code> と <code>~/.sbt</code> なので、その2つを指定しています。</p>
+<h5 id="wercker-cache-sh"><a href="#wercker-cache-sh" class="headerlink" title="wercker_cache.sh"></a>wercker_cache.sh</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">#=========================================</span></span><br><span class="line"><span class="comment"># Script for storing and restoring cache</span></span><br><span class="line"><span class="comment">#   in Java / Scala project on werkcer</span></span><br><span class="line"><span class="comment">#=========================================</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># cache directories</span></span><br><span class="line">CACHES=( <span class="string">"ivy2"</span> <span class="string">"sbt"</span> )</span><br><span class="line">CMD=<span class="string">"<span class="variable">$1</span>"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># check if rsync exists</span></span><br><span class="line"><span class="keyword">if</span> ! <span class="built_in">type</span> rsync &gt; /dev/null; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"[ERROR] rsync needs to be installed."</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># set source and destination directories</span></span><br><span class="line"><span class="keyword">case</span> <span class="variable">$CMD</span> <span class="keyword">in</span></span><br><span class="line">    <span class="string">"store"</span>)</span><br><span class="line">        SRC=<span class="variable">$HOME</span></span><br><span class="line">        DST=<span class="variable">$WERCKER_CACHE_DIR</span></span><br><span class="line">        ;;</span><br><span class="line">    <span class="string">"restore"</span>)</span><br><span class="line">        SRC=<span class="variable">$WERCKER_CACHE_DIR</span></span><br><span class="line">        DST=<span class="variable">$HOME</span></span><br><span class="line">        ;;</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># run rsync</span></span><br><span class="line"><span class="keyword">for</span> cache <span class="keyword">in</span> <span class="string">"<span class="variable">$&#123;CACHES[@]&#125;</span>"</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">test</span> -d <span class="variable">$SRC</span>/.<span class="variable">$cache</span>; <span class="keyword">then</span></span><br><span class="line">        rsync -avz <span class="variable">$SRC</span>/.<span class="variable">$cache</span> <span class="variable">$DST</span>/</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>Gist を貼り付けるとレイアウトが崩れてしまうので、 <a href="https://gist.github.com/skatsuta/8f63194dfd65712da640" target="_blank" rel="noopener">Gist 版はこちら</a></p>
+<p>単に rsync で <code>$WERCKER_CACHE_DIR</code> へ保存したり、そこから復元したりしているだけです。<br>このシェルスクリプトをプロジェクトのリポジトリに入れておきます (たとえば <code>sh/wercker_cache.sh</code> など)。</p>
+<h2 id="wercker-yml-にキャッシュの保存-復元処理を書く"><a href="#wercker-yml-にキャッシュの保存-復元処理を書く" class="headerlink" title="wercker.yml にキャッシュの保存/復元処理を書く"></a>wercker.yml にキャッシュの保存/復元処理を書く</h2><p>最後に、 <code>wercker.yml</code> にキャッシュの保存/復元処理を書きます。<br>以下はサンプルで、 <code>sh/wercker_cache.sh</code> に先のスクリプトが入っているとします。</p>
+<h5 id="wercker-yml"><a href="#wercker-yml" class="headerlink" title="wercker.yml"></a>wercker.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">box:</span> <span class="string">skatsuta/activator@0.0.3</span></span><br><span class="line"></span><br><span class="line"><span class="attr">build:</span></span><br><span class="line"><span class="attr">  steps:</span></span><br><span class="line"><span class="attr">    - script:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">restore</span> <span class="string">cache</span></span><br><span class="line"><span class="attr">        code:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          sh/wercker_cache.sh restore</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span><span class="attr">    - script:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">run</span> <span class="string">activator</span> <span class="string">test</span></span><br><span class="line"><span class="attr">        code:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          activator test</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span><span class="attr">    - script:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">store</span> <span class="string">cache</span></span><br><span class="line"><span class="attr">        code:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          sh/wercker_cache.sh store</span></span><br></pre></td></tr></table></figure>
+<p>これで wercker 上でビルドしてみると、2回目以降は <strong>restore cache</strong> というステップで各キャッシュがホームディレクトリに復元され、 <strong>store cache</strong> というステップで前回のキャッシュディレクトリとの差分が保存されていることが確認できると思います。</p>
+<h2 id="ビルド時間の短縮に成功！"><a href="#ビルド時間の短縮に成功！" class="headerlink" title="ビルド時間の短縮に成功！"></a>ビルド時間の短縮に成功！</h2><p>僕のプロジェクトではこのおかげで wercker 上でのビルド時間を<strong>2分弱</strong>短縮することができました。めでたしめでたし。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/06/07/java-werkcer/" data-id="cjepfn0o9000kurcqgxm36nx3" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/06/07/java-werkcer/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ant/">Ant</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle/">Gradle</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Maven/">Maven</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Play-Framework/">Play Framework</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sbt/">sbt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wercker/">wercker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-angularjs-filter-japanese" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/05/01/angularjs-filter-japanese/" class="article-date">
+  <time datetime="2015-05-01T14:08:04.000Z" itemprop="datePublished">2015-05-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/05/01/angularjs-filter-japanese/">AngularJS のフィルタを日本語表記に合わせる</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="AngularJS-で-currency-フィルタや-date-フィルタを日本語の表記に合わせるには？"><a href="#AngularJS-で-currency-フィルタや-date-フィルタを日本語の表記に合わせるには？" class="headerlink" title="AngularJS で currency フィルタや date フィルタを日本語の表記に合わせるには？"></a>AngularJS で <code>currency</code> フィルタや <code>date</code> フィルタを日本語の表記に合わせるには？</h2><p>AngularJS のフィルタは便利な機能です。その中で <code>currency</code> フィルタや <code>date</code> フィルタといった、フォーマットを整えてくれるフィルタがありますが、デフォルトでは US 表記になっています。これを日本語の表記に合わせるには、angular-i18n モジュールを利用します。</p>
+<p>以下の方法は <a href="http://qiita.com/katahirado/items/ca4a9a202374b5f8d9f9" target="_blank" rel="noopener">grunt-wiredep使用の環境でangular-i18nをbowerでインストールしたら注入できないとメッセージ - Qiita</a> を参考にさせていただきました。</p>
+<h2 id="angular-i18n-モジュールをインストールする"><a href="#angular-i18n-モジュールをインストールする" class="headerlink" title="angular-i18n モジュールをインストールする"></a>angular-i18n モジュールをインストールする</h2><p>Bower を利用してインストールします。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ bower install angular-i18n --save</span><br><span class="line">bower not-cached    git://github.com/angular/bower-angular-i18n.git<span class="comment">#*</span></span><br><span class="line">bower resolve       git://github.com/angular/bower-angular-i18n.git<span class="comment">#*</span></span><br><span class="line">bower download      https://github.com/angular/bower-angular-i18n/archive/v1.2.24.tar.gz</span><br><span class="line">bower extract       angular-i18n<span class="comment">#* archive.tar.gz</span></span><br><span class="line">bower invalid-meta  angular-i18n is missing <span class="string">"main"</span> entry <span class="keyword">in</span> bower.json</span><br><span class="line">bower resolved      git://github.com/angular/bower-angular-i18n.git<span class="comment">#1.2.24</span></span><br><span class="line">bower install       angular-i18n<span class="comment">#1.2.24</span></span><br></pre></td></tr></table></figure>
+<p>ん？ <code>bower invalid-meta  angular-i18n is missing &quot;main&quot; entry in bower.json</code> という警告が出ていますね。<br>同時に <code>gulp serve</code> などを走らせていた場合、以下のような警告が出てしまいます。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">angular-i18n was not injected <span class="keyword">in</span> your file.</span><br><span class="line">Please go take a look <span class="keyword">in</span> <span class="string">"app/bower_components/angular-i18n"</span> <span class="keyword">for</span> the file you need, the manually include it <span class="keyword">in</span> your file.</span><br></pre></td></tr></table></figure>
+<p>Bower が angular-i18n モジュールのうち、どのファイルをインクルードしていいのかわからないようです。</p>
+<h2 id="angular-i18n-の-main-を指定する"><a href="#angular-i18n-の-main-を指定する" class="headerlink" title="angular-i18n の main を指定する"></a>angular-i18n の main を指定する</h2><p>bower.json で明示的に使用するロケールファイルを指定してあげましょう。</p>
+<h5 id="bower-json"><a href="#bower-json" class="headerlink" title="bower.json"></a>bower.json</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"myApp"</span>,</span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"0.0.0"</span>,</span><br><span class="line">  ... 省略 ....</span><br><span class="line">  <span class="string">"resolutions"</span>: &#123;</span><br><span class="line">    <span class="string">"angular"</span>: <span class="string">"1.3.x"</span>,</span><br><span class="line">    <span class="string">"jquery"</span>: <span class="string">"2.x.x"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">//=== ここから追記 ===</span></span><br><span class="line">  <span class="string">"overrides"</span>: &#123;</span><br><span class="line">    <span class="string">"angular-i18n"</span>: &#123;</span><br><span class="line">      <span class="string">"main"</span>: <span class="string">"angular-locale_ja-jp.js"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//=== ここまで追記 ===</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>これで index.html に自動的に追記されるようになります。</p>
+<h5 id="index-html-の抜粋"><a href="#index-html-の抜粋" class="headerlink" title="index.html の抜粋"></a>index.html の抜粋</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- bower:js --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"bower_components/jquery/dist/jquery.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"bower_components/angular/angular.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"bower_components/angular-i18n/angular-locale_ja-jp.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- endbower --&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="日本語表記に変わったか確かめてみる"><a href="#日本語表記に変わったか確かめてみる" class="headerlink" title="日本語表記に変わったか確かめてみる"></a>日本語表記に変わったか確かめてみる</h2><p>以下のような HTML と JS を用意し、レンダリング結果を見てみます。</p>
+<h5 id="index-html"><a href="#index-html" class="headerlink" title="index.html"></a>index.html</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"ja"</span> <span class="attr">ng-app</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Format test<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">ng-controller</span>=<span class="string">"FormatCtrl"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>日付<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123;today&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123;today | date: 'fullDate'&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>通貨<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123;yen&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123;yen | currency&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- bower:js --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"bower_components/jquery/dist/jquery.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"bower_components/angular/angular.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"bower_components/angular-i18n/angular-locale_ja-jp.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- endbower --&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"scripts/main.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h5 id="main-js"><a href="#main-js" class="headerlink" title="main.js"></a>main.js</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="string">'use strict'</span>;</span><br><span class="line">  angular.module(<span class="string">'app'</span>, []).controller(<span class="string">'FormatCtrl'</span>, [<span class="string">'$scope'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">$scope</span>) </span>&#123;</span><br><span class="line">    $scope.today = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    $scope.yen = <span class="number">1000000</span>;</span><br><span class="line">  &#125;]);</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<h3 id="結果"><a href="#結果" class="headerlink" title="結果"></a>結果</h3><div style="padding: 0px 15px; border: 1px solid black"><h1>日付</h1><p>“2014-09-15T11:38:50.158Z”</p><p>2014年9月15日月曜日</p><h1>通貨</h1><p>1000000</p><p>\1,000,000</p></div>
+
+<p>きちんと日本語の表記にフォーマットされていますね。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/05/01/angularjs-filter-japanese/" data-id="cjepfn0nn0001urcqs983h2mr" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/05/01/angularjs-filter-japanese/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AngularJS/">AngularJS</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hexo-github-pages" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/30/hexo-github-pages/" class="article-date">
+  <time datetime="2015-04-30T08:34:17.000Z" itemprop="datePublished">2015-04-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/04/30/hexo-github-pages/">Hexo + GitHub Pages で簡単ブログ作成</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>いまや巷には<a href="https://staticsitegenerators.net/" target="_blank" rel="noopener">溢れるほどの静的サイトジェネレータがあります</a>が、このブログは <a href="http://hexo.io" target="_blank" rel="noopener">Hexo</a> を使って書き、 GitHub Pages で公開しています。 個人的に今 Go 言語が好きなこともあって <a href="http://gohugo.io" target="_blank" rel="noopener">Hugo</a> とどちらを使おうかかなり悩んだのですが、僕は（デザインセンスに自信がないので）格好いい出来合いのテーマを使いたかったので、テーマの種類が多い Hexo を選びました。</p>
+<p>Hexo の導入自体は非常に簡単なのですが、 GitHub Pages と連携させる際のやり方が最近ちょっと変わったらしく、検索して出てきた情報がどれも古かったので、覚え書きも兼ねて書いてみます。</p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p>以下のサイトを参考にさせていただきました。</p>
+<ul>
+<li><a href="http://liginc.co.jp/web/programming/server/104594" target="_blank" rel="noopener">所要時間3分!? Github PagesとHEXOで爆速ブログ構築してみよう！ | 株式会社LIG</a></li>
+<li><a href="http://blog.otakumode.com/2014/08/08/Blogging-with-hexoio/" target="_blank" rel="noopener">チームブログをGitHubとHexoではじめよう！ | Tokyo Otaku Mode Blog</a></li>
+<li><a href="http://qiita.com/bird_nitryn/items/5988a1efe47e0d47132b" target="_blank" rel="noopener">Hexo と GitHub Pages でブログ環境を構築して公開する - Qiita</a></li>
+</ul>
+<p>ただし注意点として、これらの記事はどれも Github Pages で公開する手順の設定情報が古いです。現在の正しい設定は下記「<strong>GitHub Pages で公開する</strong>」のセクションに書きました。</p>
+<h2 id="Hexo-を導入する"><a href="#Hexo-を導入する" class="headerlink" title="Hexo を導入する"></a>Hexo を導入する</h2><p>まず Git と Node がインストールされていることが前提です。これらの導入方法については省略します。</p>
+<p>Hexo の導入自体は<a href="http://hexo.io" target="_blank" rel="noopener">公式サイトのトップページ</a>に載っている通りにコマンドを実行するだけです。が、 Hexo のリソース自体も GitHub などで管理したほうがいいので、先にリポジトリを作った上で、それをクローンしてきて、その中で Hexo の初期化を実行したほうが良いと思います。</p>
+<p>以下は僕の例です。 <a href="https://github.com/skatsuta/blog-hexo" target="_blank" rel="noopener">skatsuta/blog-hexo</a> という GitHub リポジトリを作った上で、以下を実行します。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Hexo をインストールする</span></span><br><span class="line">$ npm install -g hexo-cli</span><br><span class="line"></span><br><span class="line"><span class="comment"># 作っておいた Hexo 用のリポジトリをクローンしてくる</span></span><br><span class="line">$ git <span class="built_in">clone</span> git@github.com:skatsuta/blog-hexo.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># Hexo の初期化を実行する</span></span><br><span class="line"><span class="comment"># (必要なファイル/フォルダが生成されるとともに、.gitignore が上書きされます)</span></span><br><span class="line">$ hexo init blog-hexo</span><br><span class="line"></span><br><span class="line"><span class="comment"># リポジトリに移動する</span></span><br><span class="line">$ <span class="built_in">cd</span> blog-hexo</span><br><span class="line"></span><br><span class="line"><span class="comment"># npm モジュールをインストールする</span></span><br><span class="line">$ npm install</span><br><span class="line"></span><br><span class="line"><span class="comment"># Hexo サーバを動かしてプレビューを確認する</span></span><br><span class="line">$ hexo server</span><br><span class="line">INFO  Hexo is running at http://0.0.0.0:4000/. Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
+<p>メッセージの通り <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> にアクセスしてみて、無事にプレビューが表示されればとりあえずの構築は完了です。</p>
+<h2 id="ファイルの変更をブラウザに即時反映する"><a href="#ファイルの変更をブラウザに即時反映する" class="headerlink" title="ファイルの変更をブラウザに即時反映する"></a>ファイルの変更をブラウザに即時反映する</h2><p>デフォルトでは記事を書き換えてもプレビューには即時反映されず、毎回サーバを再起動しなければなりません。 Markdown エディタで書けばだいたいの仕上がり具合はわかりますが、やはり実際に適用されるテーマとは違ってしまいます。</p>
+<p>そこで <a href="http://www.browsersync.io/" target="_blank" rel="noopener">BrowserSync</a> を使い、プレビューへの即時反映の設定をしてみたいと思います。</p>
+<p>まず <a href="http://www.browsersync.io/#install" target="_blank" rel="noopener">Get started in 5 minutes</a> の <strong>2.</strong> に従い、 BrowserSync をインストールします。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g browser-sync</span><br></pre></td></tr></table></figure>
+<p>続いて、 <a href="https://github.com/hexojs/hexo-browsersync" target="_blank" rel="noopener">hexo-browsersync</a> プラグインをインストールします。 <code>package.json</code> にも加えたいので、 <code>--save</code> オプションを付けておきます。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-browsersync --save</span><br></pre></td></tr></table></figure>
+<p>これで導入は終わりです。再び Hexo サーバを立ち上げてから設定や記事を書き換えて保存すると、そのたびに以下のようなメッセージが出てブラウザがリロードされ、変更点がプレビューに即時に反映されるはずです。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br><span class="line">INFO  Hexo is running at http://0.0.0.0:4000/. Press Ctrl+C to stop.</span><br><span class="line">[BS] Reloading Browsers...</span><br><span class="line">[BS] Reloading Browsers...</span><br><span class="line">[BS] Reloading Browsers...</span><br></pre></td></tr></table></figure>
+<h2 id="記事を書く"><a href="#記事を書く" class="headerlink" title="記事を書く"></a>記事を書く</h2><p>快適な執筆環境が整ったところで、早速記事を書いていきます。 Hexo で新しく記事を作るには以下のコマンドを実行します。たとえば <code>Hello, World</code> というタイトルの記事を書く場合です。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"Hello, World"</span></span><br><span class="line">INFO  Created: ~/repos/blog-hexo/<span class="built_in">source</span>/_posts/Hello-World.md</span><br></pre></td></tr></table></figure>
+<p>生成された Markdown ファイルの中は次のようになっています。</p>
+<h5 id="source-posts-Hello-World-md"><a href="#source-posts-Hello-World-md" class="headerlink" title="source/_posts/Hello-World.md"></a>source/_posts/Hello-World.md</h5><figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title: "Hello, World"</span><br><span class="line">date: 2015-04-30 17:03:08</span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<p>あとは Markdown で好きなように記事を書いていきます。 BrowserSync を入れているとそのありがたみがわかりますよね？</p>
+<h4 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h4><p>日本語で書く場合たいていタイトルも日本語になると思うので、 <code>hexo new &quot;日本語タイトル&quot;</code> というようにコマンド発行したいところです。しかしそうするとファイル名も日本語になってしまい、 Git での管理時にちょっと面倒なことが生じる場合が多いです。なので、ファイル名は英語で生成しておいて、 <code>title:</code> 部分を日本語に書き換えるほうが吉です。このあたりがちょっとした不満点ですね。</p>
+<h2 id="GitHub-Pages-で公開する"><a href="#GitHub-Pages-で公開する" class="headerlink" title="GitHub Pages で公開する"></a>GitHub Pages で公開する</h2><p>最後に GitHub Pages で公開します。</p>
+<p><a href="http://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Hexo の Deployment のページ</a>にある通り、まず <a href="https://github.com/hexojs/hexo-deployer-git" target="_blank" rel="noopener">hexo-deployer-git</a> プラグインをインストールします。これも <code>package.json</code> に加えたいので、 <code>--save</code> オプションを付けておきます。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>続いて <code>_config.yml</code> の <code>deploy</code> の項目に必要な設定を追記します。以下は僕の例です。 </p>
+<h5 id="config-yml"><a href="#config-yml" class="headerlink" title="_config.yml"></a>_config.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">  repo:</span> <span class="string">git@github.com:skatsuta/skatsuta.github.io.git</span></span><br><span class="line"><span class="attr">  branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<p>GitHub Pages で公開する場合には、<a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages のドキュメント</a>にもある通り、 <code>&lt;username&gt;.github.io</code> というリポジトリを作ります。そこにプッシュされたコンテンツが自動的に <code>http://&lt;username&gt;.github.io/</code> で公開されるようになります。</p>
+<p>最後に、 Hexo で以下のコマンドを使ってデプロイします。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy --generate</span><br></pre></td></tr></table></figure>
+<p>上記のコマンドは以下と同じ意味になります。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 静的コンテンツを生成する</span></span><br><span class="line">$ hexo generate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 静的コンテンツを設定されたデプロイ先にデプロイする</span></span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>実際には、デプロイの際にいったん既存の生成データをすべて削除した上で再生成したほうが良さそうなため、僕は次のようなシェルスクリプトを実行しています。 <code>hexo clean</code> は生成コンテンツとキャッシュをすべて削除するコマンドです。</p>
+<h5 id="deploy-sh"><a href="#deploy-sh" class="headerlink" title="deploy.sh"></a>deploy.sh</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo deploy --generate</span><br></pre></td></tr></table></figure>
+<p>以上が完了すると、 <a href="http://skatsuta.github.io/">http://skatsuta.github.io/</a> にこのブログが公開されます。</p>
+<h2 id="ね、簡単でしょう？"><a href="#ね、簡単でしょう？" class="headerlink" title="ね、簡単でしょう？"></a>ね、簡単でしょう？</h2><p>Hexo は記事をすべて Markdown で書けるので簡単にバージョン管理ができますし、他の Markdown 対応静的サイトジェネレータに移行するのもハードルが低いです。</p>
+<p>ちなみにこのブログのテーマには <a href="https://github.com/xiangming/landscape-plus" target="_blank" rel="noopener">Landscape plus</a> を少しカスタムして使っています。デフォルトで結構格好いいので気に入っています。</p>
+<p>当分の間は Hexo をいろいろいじりながら使ってみようと思います。 Hugo がもう少し成熟したらそちらも使ってみたいですね。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/04/30/hexo-github-pages/" data-id="cjepfn0nv0007urcqow3fjvz5" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/04/30/hexo-github-pages/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-shell-script" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/29/shell-script/" class="article-date">
+  <time datetime="2015-04-29T12:21:49.000Z" itemprop="datePublished">2015-04-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/04/29/shell-script/">シェルスクリプトの覚え書き</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>たまにしか書かないのでいつも忘れてしまい、書く必要があるときになって毎度調べ直しているので、覚え書きとしてきちんとまとめてみます。</p>
+<p>内容は非常に初歩的なことばかりです。</p>
+<h2 id="shebang"><a href="#shebang" class="headerlink" title="shebang"></a>shebang</h2><p>シェルスクリプトの先頭に書く宣言文。<br>どのシェルを利用して実行するかを指定する。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br></pre></td></tr></table></figure>
+<h2 id="変数"><a href="#変数" class="headerlink" title="変数"></a>変数</h2><h3 id="シェル変数"><a href="#シェル変数" class="headerlink" title="シェル変数"></a>シェル変数</h3><p>実行しているシェルの内部でのみ有効な変数。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 変数abcに123を代入する</span></span><br><span class="line">abc=123</span><br></pre></td></tr></table></figure>
+<h3 id="環境変数"><a href="#環境変数" class="headerlink" title="環境変数"></a>環境変数</h3><p>シェルから実行されたコマンド内でも有効な変数。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 環境変数abcを設定する</span></span><br><span class="line"><span class="built_in">export</span> abc=123</span><br></pre></td></tr></table></figure>
+<h2 id="read-コマンド"><a href="#read-コマンド" class="headerlink" title="read コマンド"></a><code>read</code> コマンド</h2><p>標準入力からデータを読み込む。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># abc に標準出力からのデータを代入する</span></span><br><span class="line"><span class="built_in">read</span> abc</span><br></pre></td></tr></table></figure>
+<h2 id="引用符"><a href="#引用符" class="headerlink" title="引用符"></a>引用符</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 変数 abc に文字列 xyz をセットする</span></span><br><span class="line">$ abc=xyz</span><br><span class="line"></span><br><span class="line"><span class="comment"># シングルクォーテーションは文字列として認識する</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">'The value of abc is $abc.'</span></span><br><span class="line">The value of abc is <span class="variable">$abc</span>.</span><br><span class="line"></span><br><span class="line"><span class="comment"># ダブルクォーテーションは変数として展開する</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">"The value of abc is <span class="variable">$abc</span>."</span></span><br><span class="line">The value of abc is xyz.</span><br><span class="line"></span><br><span class="line"><span class="comment"># バッククオートはコマンドとして実行する</span></span><br><span class="line">$ abc=`date`</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$abc</span></span><br><span class="line">2014年 7月 15日 火曜日 17:56:34 JST</span><br></pre></td></tr></table></figure>
+<h2 id="引数"><a href="#引数" class="headerlink" title="引数"></a>引数</h2><p><code>$0</code>は実行コマンド名、<code>$#</code>は引数の数を表す。</p>
+<h3 id="args-sh"><a href="#args-sh" class="headerlink" title="args.sh"></a>args.sh</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">'$1: '</span> <span class="variable">$1</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'$2: '</span> <span class="variable">$2</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'$0: '</span> <span class="variable">$0</span>;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">'$#: '</span> <span class="variable">$#</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="実行結果"><a href="#実行結果" class="headerlink" title="実行結果"></a>実行結果</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ./args.sh aaa bbb</span><br><span class="line"><span class="variable">$1</span>: aaa</span><br><span class="line"><span class="variable">$2</span>: bbb</span><br><span class="line"><span class="variable">$0</span>: ./args.sh</span><br><span class="line"><span class="variable">$#</span>: 2</span><br></pre></td></tr></table></figure>
+<h2 id="エスケープシーケンス"><a href="#エスケープシーケンス" class="headerlink" title="エスケープシーケンス"></a>エスケープシーケンス</h2><p>行末にバックスラッシュをつけると、<strong>改行コードがエスケープ</strong>されて文字列を途中で折り返すことができる。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"Hi! \</span></span><br><span class="line"><span class="string">Today is the day!"</span></span><br><span class="line">Hi! Today is the day!</span><br></pre></td></tr></table></figure>
+<h2 id="条件分岐"><a href="#条件分岐" class="headerlink" title="条件分岐"></a>条件分岐</h2><h3 id="構文"><a href="#構文" class="headerlink" title="構文"></a>構文</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ condition1 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"><span class="keyword">elif</span> [ condition2 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="comment"># ...</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<h2 id="演算子"><a href="#演算子" class="headerlink" title="演算子"></a>演算子</h2><h3 id="文字列比較"><a href="#文字列比較" class="headerlink" title="文字列比較"></a>文字列比較</h3><table>
+<thead>
+<tr>
+<th>演算子</th>
+<th>比較内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a == b</code></td>
+<td>a と b が等しければ真</td>
+</tr>
+<tr>
+<td><code>a != b</code></td>
+<td>a と b が等しくなければ真</td>
+</tr>
+</tbody>
+</table>
+<h3 id="数値比較"><a href="#数値比較" class="headerlink" title="数値比較"></a>数値比較</h3><table>
+<thead>
+<tr>
+<th>演算子</th>
+<th>比較内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a -eq b</code></td>
+<td>a と b が等しければ真</td>
+</tr>
+<tr>
+<td><code>a -ne b</code></td>
+<td>a と b が等しくなければ真</td>
+</tr>
+<tr>
+<td><code>a -ge b</code></td>
+<td>a が b 以上なら真</td>
+</tr>
+<tr>
+<td><code>a -le b</code></td>
+<td>a が b 以下なら真</td>
+</tr>
+<tr>
+<td><code>a -gt b</code></td>
+<td>a が b より大きいなら真</td>
+</tr>
+<tr>
+<td><code>a -lt b</code></td>
+<td>a が b より小さいなら真</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ファイル属性の確認"><a href="#ファイル属性の確認" class="headerlink" title="ファイル属性の確認"></a>ファイル属性の確認</h2><p>パスがディレクトリであれば真</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -d path ]; <span class="keyword">then</span> ...</span><br></pre></td></tr></table></figure>
+<h3 id="test-コマンドの書き方2通り"><a href="#test-コマンドの書き方2通り" class="headerlink" title="test コマンドの書き方2通り"></a>test コマンドの書き方2通り</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> 条件節; <span class="keyword">then</span> ...</span><br><span class="line"><span class="keyword">if</span> [ 条件節 ]; <span class="keyword">then</span> ...</span><br></pre></td></tr></table></figure>
+<h3 id="ファイル属性を確認する演算子"><a href="#ファイル属性を確認する演算子" class="headerlink" title="ファイル属性を確認する演算子"></a>ファイル属性を確認する演算子</h3><table>
+<thead>
+<tr>
+<th>演算子</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-f ファイル名</code></td>
+<td>通常ファイルなら真</td>
+</tr>
+<tr>
+<td><code>-d ファイル名</code></td>
+<td>ディレクトリなら真</td>
+</tr>
+<tr>
+<td><code>-e ファイル名</code></td>
+<td>ファイルが存在すれば真</td>
+</tr>
+<tr>
+<td><code>-L ファイル名</code></td>
+<td>シンボリックリンクなら真</td>
+</tr>
+<tr>
+<td><code>-r ファイル名</code></td>
+<td>読み取り可能なら真</td>
+</tr>
+<tr>
+<td><code>-w ファイル名</code></td>
+<td>書き込み可能なら真</td>
+</tr>
+<tr>
+<td><code>-x ファイル名</code></td>
+<td>ファイルに実行権限があれば真</td>
+</tr>
+<tr>
+<td><code>-s ファイル名</code></td>
+<td>サイズが0より大きければ真</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/04/29/shell-script/" data-id="cjepfn0ob000murcqpuxu1cir" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/04/29/shell-script/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell-script/">shell script</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
+  
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Aerospike/">Aerospike</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Amazon-EC2/">Amazon EC2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/">Ant</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boot2Docker/">Boot2Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CLI/">CLI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cryptography/">Cryptography</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DES/">DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Machine/">Docker Machine</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Remote-API/">Docker Remote API</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Driver-Plugins/">Driver Plugins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPie/">HTTPie</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVS/">KVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/">Maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Play-Framework/">Play Framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rijndael/">Rijndael</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ruby/">Ruby</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RubyGems/">RubyGems</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Triple-DES/">Triple DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/">VirtualBox</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aql/">aql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bashrc/">bashrc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sbt/">sbt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-script/">shell script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wercker/">wercker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zshrc/">zshrc</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 12.5px;">AES</a> <a href="/tags/Aerospike/" style="font-size: 12.5px;">Aerospike</a> <a href="/tags/Amazon-EC2/" style="font-size: 10px;">Amazon EC2</a> <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/Ant/" style="font-size: 10px;">Ant</a> <a href="/tags/Boot2Docker/" style="font-size: 10px;">Boot2Docker</a> <a href="/tags/CBC-Mode/" style="font-size: 10px;">CBC Mode</a> <a href="/tags/CLI/" style="font-size: 10px;">CLI</a> <a href="/tags/Cryptography/" style="font-size: 15px;">Cryptography</a> <a href="/tags/DES/" style="font-size: 10px;">DES</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Docker-Machine/" style="font-size: 15px;">Docker Machine</a> <a href="/tags/Docker-Remote-API/" style="font-size: 10px;">Docker Remote API</a> <a href="/tags/Driver-Plugins/" style="font-size: 10px;">Driver Plugins</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Go/" style="font-size: 20px;">Go</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/HTTPie/" style="font-size: 10px;">HTTPie</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/KVS/" style="font-size: 10px;">KVS</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Play-Framework/" style="font-size: 10px;">Play Framework</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/Rijndael/" style="font-size: 10px;">Rijndael</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/RubyGems/" style="font-size: 10px;">RubyGems</a> <a href="/tags/Scala/" style="font-size: 10px;">Scala</a> <a href="/tags/Triple-DES/" style="font-size: 10px;">Triple DES</a> <a href="/tags/VirtualBox/" style="font-size: 12.5px;">VirtualBox</a> <a href="/tags/aql/" style="font-size: 10px;">aql</a> <a href="/tags/bashrc/" style="font-size: 10px;">bashrc</a> <a href="/tags/sbt/" style="font-size: 10px;">sbt</a> <a href="/tags/shell-script/" style="font-size: 10px;">shell script</a> <a href="/tags/wercker/" style="font-size: 15px;">wercker</a> <a href="/tags/zshrc/" style="font-size: 10px;">zshrc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">3月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">1月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">12月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">11月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">10月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">8月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">7月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">6月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">5月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">4月 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/06/hyuki-crypt-book-go-3/">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/19/hyuki-crypt-book-go-2/">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/02/hyuki-crypt-book-go-1/">Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/29/value-receiver-pointer-receiver/">Go 言語の値レシーバとポインタレシーバ</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/22/docker-machine-plugin/">Docker Machine v0.5 の Driver Plugins の仕組み</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 skatsuta<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'skatsutagithubio';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62443224-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>OS X 10.11 で RubyGems の native extension のビルドに失敗したら | Step by Step</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="OS X 10.11 El Capitan にアップグレードしたのですが、その後 native extension を利用する gem のインストールに失敗するようになりました。今後のために、エラーの内容と解決方法について残しておくことにします。 Native extension のビルドに失敗するたとえば sqlite3 の gem を入れようとしたところ、以下のようなエラーが発生して、 nat">
+<meta name="keywords" content="Ruby,RubyGems">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OS X 10.11 で RubyGems の native extension のビルドに失敗したら">
+<meta property="og:url" content="https://skatsuta.github.io/2015/10/03/fail-gem-install/index.html">
+<meta property="og:site_name" content="Step by Step">
+<meta property="og:description" content="OS X 10.11 El Capitan にアップグレードしたのですが、その後 native extension を利用する gem のインストールに失敗するようになりました。今後のために、エラーの内容と解決方法について残しておくことにします。 Native extension のビルドに失敗するたとえば sqlite3 の gem を入れようとしたところ、以下のようなエラーが発生して、 nat">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:updated_time" content="2018-03-13T08:06:37.809Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OS X 10.11 で RubyGems の native extension のビルドに失敗したら">
+<meta name="twitter:description" content="OS X 10.11 El Capitan にアップグレードしたのですが、その後 native extension を利用する gem のインストールに失敗するようになりました。今後のために、エラーの内容と解決方法について残しておくことにします。 Native extension のビルドに失敗するたとえば sqlite3 の gem を入れようとしたところ、以下のようなエラーが発生して、 nat">
+  
+    <link rel="alternative" href="/atom.xml" title="Step by Step" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-62443224-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Step by Step</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">1歩ずつ 確実に 進歩していこう</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.google.com/search" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="q" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="hidden" name="sitesearch" value="skatsuta.github.io">
+          <input type="submit" value="" class="search-form-submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-fail-gem-install" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/03/fail-gem-install/" class="article-date">
+  <time datetime="2015-10-03T12:36:09.000Z" itemprop="datePublished">2015-10-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      OS X 10.11 で RubyGems の native extension のビルドに失敗したら
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>OS X 10.11 El Capitan にアップグレードしたのですが、その後 native extension を利用する gem のインストールに失敗するようになりました。今後のために、エラーの内容と解決方法について残しておくことにします。</p>
+<h2 id="Native-extension-のビルドに失敗する"><a href="#Native-extension-のビルドに失敗する" class="headerlink" title="Native extension のビルドに失敗する"></a>Native extension のビルドに失敗する</h2><p>たとえば sqlite3 の gem を入れようとしたところ、以下のようなエラーが発生して、 native extension のビルドに失敗しました。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">$ gem install sqlite3 -v <span class="string">'1.3.10'</span></span><br><span class="line">Building native extensions.  This could take a <span class="keyword">while</span>...</span><br><span class="line">ERROR:  Error installing sqlite3:</span><br><span class="line">        ERROR: Failed to build gem native extension.</span><br><span class="line"></span><br><span class="line">    /Users/skatsuta/.rbenv/versions/2.1.5/bin/ruby extconf.rb</span><br><span class="line">checking <span class="keyword">for</span> sqlite3.h... *** extconf.rb failed ***</span><br><span class="line">Could not create Makefile due to some reason, probably lack of necessary</span><br><span class="line">libraries and/or headers.  Check the mkmf.log file <span class="keyword">for</span> more details.  You may</span><br><span class="line">need configuration options.</span><br><span class="line"></span><br><span class="line">Provided configuration options:</span><br><span class="line">        --with-opt-dir</span><br><span class="line">        --without-opt-dir</span><br><span class="line">        --with-opt-include</span><br><span class="line">        --without-opt-include=<span class="variable">$&#123;opt-dir&#125;</span>/include</span><br><span class="line">        --with-opt-lib</span><br><span class="line">        --without-opt-lib=<span class="variable">$&#123;opt-dir&#125;</span>/lib</span><br><span class="line">        --with-make-prog</span><br><span class="line">        --without-make-prog</span><br><span class="line">        --srcdir=.</span><br><span class="line">        --curdir</span><br><span class="line">        --ruby=/Users/skatsuta/.rbenv/versions/2.1.5/bin/ruby</span><br><span class="line">        --with-sqlite3-dir</span><br><span class="line">        --without-sqlite3-dir</span><br><span class="line">        --with-sqlite3-include</span><br><span class="line">        --without-sqlite3-include=<span class="variable">$&#123;sqlite3-dir&#125;</span>/include</span><br><span class="line">        --with-sqlite3-lib</span><br><span class="line">        --without-sqlite3-lib=<span class="variable">$&#123;sqlite3-dir&#125;</span>/lib</span><br><span class="line">/Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:456:<span class="keyword">in</span> `try_do<span class="string">': The compiler failed to generate an executable file. (RuntimeError)</span></span><br><span class="line"><span class="string">You have to install development tools first.</span></span><br><span class="line"><span class="string">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:587:in `try_cpp'</span></span><br><span class="line">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:1120:<span class="keyword">in</span> `block <span class="keyword">in</span> find_header<span class="string">'</span></span><br><span class="line"><span class="string">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:918:in `block in checking_for'</span></span><br><span class="line">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:351:<span class="keyword">in</span> `block (2 levels) <span class="keyword">in</span> postpone<span class="string">'</span></span><br><span class="line"><span class="string">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:321:in `open'</span></span><br><span class="line">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:351:<span class="keyword">in</span> `block <span class="keyword">in</span> postpone<span class="string">'</span></span><br><span class="line"><span class="string">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:321:in `open'</span></span><br><span class="line">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:347:<span class="keyword">in</span> `postpone<span class="string">'</span></span><br><span class="line"><span class="string">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:917:in `checking_for'</span></span><br><span class="line">        from /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/2.1.0/mkmf.rb:1119:<span class="keyword">in</span> `find_header<span class="string">'</span></span><br><span class="line"><span class="string">        from extconf.rb:30:in `&lt;main&gt;'</span></span><br><span class="line"></span><br><span class="line">extconf failed, <span class="built_in">exit</span> code 1</span><br><span class="line"></span><br><span class="line">Gem files will remain installed <span class="keyword">in</span> /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/gems/2.1.0/gems/sqlite3-1.3.10 <span class="keyword">for</span> inspection.</span><br><span class="line">Results logged to /Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/gems/2.1.0/extensions/x86_64-darwin-14/2.1.0-static/sqlite3-1.3.10/gem_make.out</span><br></pre></td></tr></table></figure>
+<p>どうやら Makefile の生成に失敗しているようです。 <code>Check the mkmf.log file for more details.</code> とあるので、 mkmf.log を探してみます。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ find ~/.rbenv | grep sqlite | grep mkmf.log</span><br><span class="line">/Users/skatsuta/.rbenv/versions/2.1.5/lib/ruby/gems/2.1.0/extensions/x86_64-darwin-14/2.1.0-static/sqlite3-1.3.10/mkmf.log</span><br></pre></td></tr></table></figure>
+<p>ありました。こちらを見てみます。</p>
+<h5 id="mkmf-log"><a href="#mkmf-log" class="headerlink" title="mkmf.log"></a>mkmf.log</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"clang -o conftest -I/Users/skatsuta/.rbenv/versions/2.1.5/include/ruby-2.1.0/x86_64-darwin14.0 -I/Users/skatsuta/.rbenv/versions/2.1.5/include/ruby-2.1.0/ruby/backward -I/Users/skatsuta/.rbenv/versions/2.1.5/include/ruby-2.1.0 -I. -I/Users/skatsuta/.rbenv/versions/2.1.5/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT    -O3 -Wno-error=shorten-64-to-32  -pipe conftest.c  -L. -L/Users/skatsuta/.rbenv/versions/2.1.5/lib -L. -L/Users/skatsuta/.rbenv/versions/2.1.5/lib  -fstack-protector     -lruby-static -framework CoreFoundation  -lpthread -lgmp -ldl -lobjc "</span></span><br><span class="line">ld: library not found <span class="keyword">for</span> -lgmp</span><br><span class="line">clang: error: linker <span class="built_in">command</span> failed with <span class="built_in">exit</span> code 1 (use -v to see invocation)</span><br><span class="line">checked program was:</span><br><span class="line">/* begin */</span><br><span class="line">1: <span class="comment">#include "ruby.h"</span></span><br><span class="line">2:</span><br><span class="line">3: int main(int argc, char **argv)</span><br><span class="line">4: &#123;</span><br><span class="line">5:   <span class="built_in">return</span> 0;</span><br><span class="line">6: &#125;</span><br><span class="line">/* end */</span><br></pre></td></tr></table></figure>
+<p><code>ld: library not found for -lgmp</code> とあるので、 <code>gmp</code> というライブラリをリンカが見つけられていません。 GMP とは <a href="https://gmplib.org/" target="_blank" rel="noopener">GNU Multi-Precision Library</a> のことで、多倍長整数など任意の精度の算術ライブラリのようです (<a href="https://ja.wikipedia.org/wiki/GNU_Multi-Precision_Library" target="_blank" rel="noopener">Wikipedia</a>)。</p>
+<p>しかしながら、 <code>gmp</code> は Homebrew ですでにインストールされており、 <code>/usr/local/lib</code> にも存在します。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ brew list | grep gmp</span><br><span class="line">gmp</span><br><span class="line"></span><br><span class="line">$ find /usr/<span class="built_in">local</span>/lib | grep gmp</span><br><span class="line">/usr/<span class="built_in">local</span>/lib/libgmp.10.dylib</span><br><span class="line">/usr/<span class="built_in">local</span>/lib/libgmp.a</span><br><span class="line">/usr/<span class="built_in">local</span>/lib/libgmp.dylib</span><br><span class="line">/usr/<span class="built_in">local</span>/lib/libgmpxx.4.dylib</span><br><span class="line">/usr/<span class="built_in">local</span>/lib/libgmpxx.a</span><br><span class="line">/usr/<span class="built_in">local</span>/lib/libgmpxx.dylib</span><br></pre></td></tr></table></figure>
+<p>ここから先の詳しい原因はわからないのですが、 El Capitan になってからデフォルトで Clang が認識するライブラリパスに <code>/usr/local/lib</code> が含まれなくなったのではないかと思っています。このあたりは新しいセキュリティ機能である System Integrity Protection (SIP; 別名 rootless) とも関連がありそうな気がします。</p>
+<h2 id="解決方法"><a href="#解決方法" class="headerlink" title="解決方法"></a>解決方法</h2><p>場当たり的でよいのであれば、先の <code>gem install</code> 時のエラーログにもある通り、 <code>--with-opt-lib</code> オプションで明示的に指定してやればよいです。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem install sqlite3 -v <span class="string">'1.3.10'</span> -- --with-opt-lib=/usr/<span class="built_in">local</span>/lib</span><br></pre></td></tr></table></figure>
+<p>ただしこの方法だと <code>gmp</code> を使う gem をインストールするたびに、毎回指定する必要あり面倒です。</p>
+<p>永続的に効果のある解決方法は、 <code>$LIBRARY_PATH</code> 環境変数に <code>/usr/local/lib</code> を追加してやることです。これで以下のようにインストールに成功するようになります。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> LIBRARY_PATH=/usr/<span class="built_in">local</span>/lib:<span class="variable">$LIBRARY_PATH</span></span><br><span class="line">$ gem install sqlite3 -v <span class="string">'1.3.10'</span></span><br><span class="line">Fetching: sqlite3-1.3.10.gem (100%)</span><br><span class="line">Building native extensions.  This could take a <span class="keyword">while</span>...</span><br><span class="line">Successfully installed sqlite3-1.3.10</span><br><span class="line">Parsing documentation <span class="keyword">for</span> sqlite3-1.3.10</span><br><span class="line">Installing ri documentation <span class="keyword">for</span> sqlite3-1.3.10</span><br><span class="line">Done installing documentation <span class="keyword">for</span> sqlite3 after 0 seconds</span><br><span class="line">1 gem installed</span><br></pre></td></tr></table></figure>
+<p><code>export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH</code> は .bashrc や .zshrc に書いておくとよいでしょう。</p>
+<p>El Capitan では SIP があることで、 <code>/usr/local</code> 以下を使う Homebrew でも</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown -R $(whoami):admin /usr/<span class="built_in">local</span></span><br></pre></td></tr></table></figure>
+<p>というコマンドを実行して権限を変えないと正常に動作しなかったりするなど、いろいろなトラブルシューティングが必要になりそうですね。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/10/03/fail-gem-install/" data-id="cjepfn0nt0005urcq2qwswb27" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/10/03/fail-gem-install/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ruby/">Ruby</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RubyGems/">RubyGems</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/10/20/aerospike-key/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Aerospike にキーの情報も格納するには
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/08/17/httpie-docker-remote-api/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">HTTPie で Docker Remote API にアクセスする方法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Aerospike/">Aerospike</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Amazon-EC2/">Amazon EC2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/">Ant</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boot2Docker/">Boot2Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CLI/">CLI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cryptography/">Cryptography</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DES/">DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Machine/">Docker Machine</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Remote-API/">Docker Remote API</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Driver-Plugins/">Driver Plugins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPie/">HTTPie</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVS/">KVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/">Maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Play-Framework/">Play Framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rijndael/">Rijndael</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ruby/">Ruby</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RubyGems/">RubyGems</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Triple-DES/">Triple DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/">VirtualBox</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aql/">aql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bashrc/">bashrc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sbt/">sbt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-script/">shell script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wercker/">wercker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zshrc/">zshrc</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 12.5px;">AES</a> <a href="/tags/Aerospike/" style="font-size: 12.5px;">Aerospike</a> <a href="/tags/Amazon-EC2/" style="font-size: 10px;">Amazon EC2</a> <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/Ant/" style="font-size: 10px;">Ant</a> <a href="/tags/Boot2Docker/" style="font-size: 10px;">Boot2Docker</a> <a href="/tags/CBC-Mode/" style="font-size: 10px;">CBC Mode</a> <a href="/tags/CLI/" style="font-size: 10px;">CLI</a> <a href="/tags/Cryptography/" style="font-size: 15px;">Cryptography</a> <a href="/tags/DES/" style="font-size: 10px;">DES</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Docker-Machine/" style="font-size: 15px;">Docker Machine</a> <a href="/tags/Docker-Remote-API/" style="font-size: 10px;">Docker Remote API</a> <a href="/tags/Driver-Plugins/" style="font-size: 10px;">Driver Plugins</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Go/" style="font-size: 20px;">Go</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/HTTPie/" style="font-size: 10px;">HTTPie</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/KVS/" style="font-size: 10px;">KVS</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Play-Framework/" style="font-size: 10px;">Play Framework</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/Rijndael/" style="font-size: 10px;">Rijndael</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/RubyGems/" style="font-size: 10px;">RubyGems</a> <a href="/tags/Scala/" style="font-size: 10px;">Scala</a> <a href="/tags/Triple-DES/" style="font-size: 10px;">Triple DES</a> <a href="/tags/VirtualBox/" style="font-size: 12.5px;">VirtualBox</a> <a href="/tags/aql/" style="font-size: 10px;">aql</a> <a href="/tags/bashrc/" style="font-size: 10px;">bashrc</a> <a href="/tags/sbt/" style="font-size: 10px;">sbt</a> <a href="/tags/shell-script/" style="font-size: 10px;">shell script</a> <a href="/tags/wercker/" style="font-size: 15px;">wercker</a> <a href="/tags/zshrc/" style="font-size: 10px;">zshrc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">3月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">1月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">12月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">11月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">10月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">8月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">7月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">6月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">5月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">4月 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/06/hyuki-crypt-book-go-3/">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/19/hyuki-crypt-book-go-2/">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/02/hyuki-crypt-book-go-1/">Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/29/value-receiver-pointer-receiver/">Go 言語の値レシーバとポインタレシーバ</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/22/docker-machine-plugin/">Docker Machine v0.5 の Driver Plugins の仕組み</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 skatsuta<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'skatsutagithubio';
+  
+  var disqus_url = 'https://skatsuta.github.io/2015/10/03/fail-gem-install/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62443224-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

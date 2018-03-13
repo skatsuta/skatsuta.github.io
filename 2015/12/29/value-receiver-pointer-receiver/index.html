@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Go 言語の値レシーバとポインタレシーバ | Step by Step</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="「レシーバ」とはGo 言語はある種のオブジェクト指向プログラミング (OOP) 言語であり、 OOP 言語の慣例通り、メソッドを呼び出される対象のことを「レシーバ」と呼びます。 1234  p := Person&amp;#123;Name: &quot;Taro&quot;&amp;#125;  p.Greet(&quot;Hi&quot;)  ↑コイツ ちなみになぜ「レシーバ」と呼ぶのかというと、昔の OOP 言語の文脈ではメソッド呼び出しのことを">
+<meta name="keywords" content="Go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 言語の値レシーバとポインタレシーバ">
+<meta property="og:url" content="https://skatsuta.github.io/2015/12/29/value-receiver-pointer-receiver/index.html">
+<meta property="og:site_name" content="Step by Step">
+<meta property="og:description" content="「レシーバ」とはGo 言語はある種のオブジェクト指向プログラミング (OOP) 言語であり、 OOP 言語の慣例通り、メソッドを呼び出される対象のことを「レシーバ」と呼びます。 1234  p := Person&amp;#123;Name: &quot;Taro&quot;&amp;#125;  p.Greet(&quot;Hi&quot;)  ↑コイツ ちなみになぜ「レシーバ」と呼ぶのかというと、昔の OOP 言語の文脈ではメソッド呼び出しのことを">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:updated_time" content="2018-03-13T08:06:37.812Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go 言語の値レシーバとポインタレシーバ">
+<meta name="twitter:description" content="「レシーバ」とはGo 言語はある種のオブジェクト指向プログラミング (OOP) 言語であり、 OOP 言語の慣例通り、メソッドを呼び出される対象のことを「レシーバ」と呼びます。 1234  p := Person&amp;#123;Name: &quot;Taro&quot;&amp;#125;  p.Greet(&quot;Hi&quot;)  ↑コイツ ちなみになぜ「レシーバ」と呼ぶのかというと、昔の OOP 言語の文脈ではメソッド呼び出しのことを">
+  
+    <link rel="alternative" href="/atom.xml" title="Step by Step" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-62443224-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Step by Step</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">1歩ずつ 確実に 進歩していこう</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.google.com/search" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="q" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="hidden" name="sitesearch" value="skatsuta.github.io">
+          <input type="submit" value="" class="search-form-submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-value-receiver-pointer-receiver" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/29/value-receiver-pointer-receiver/" class="article-date">
+  <time datetime="2015-12-29T05:47:02.000Z" itemprop="datePublished">2015-12-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Go 言語の値レシーバとポインタレシーバ
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="「レシーバ」とは"><a href="#「レシーバ」とは" class="headerlink" title="「レシーバ」とは"></a>「レシーバ」とは</h1><p><a href="http://golang.jp/go_faq#Is_Go_an_object-oriented_language" target="_blank" rel="noopener">Go 言語はある種のオブジェクト指向プログラミング (OOP) 言語であり</a>、 OOP 言語の慣例通り、メソッドを呼び出される対象のことを「レシーバ」と呼びます。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  p := Person&#123;Name: <span class="string">"Taro"</span>&#125;</span><br><span class="line">  p.Greet(<span class="string">"Hi"</span>)</span><br><span class="line">  ↑</span><br><span class="line">コイツ</span><br></pre></td></tr></table></figure>
+<p>ちなみになぜ「レシーバ」と呼ぶのかというと、昔の OOP 言語の文脈ではメソッド呼び出しのことを「メッセージの送信」と言い、メソッドを呼び出される側は「メッセージの受信側」だからです。</p>
+<h1 id="「値レシーバ」と「ポインタレシーバ」"><a href="#「値レシーバ」と「ポインタレシーバ」" class="headerlink" title="「値レシーバ」と「ポインタレシーバ」"></a>「値レシーバ」と「ポインタレシーバ」</h1><p>Go 言語では「値」と「ポインタ」が明示的に区別されているため、たとえばある構造体に対してメソッドを定義する場合でも、「値型」に対する定義なのか「ポインタ型」に対する定義なのかはっきりと区別しなければなりません。それぞれについて簡単に説明します。</p>
+<h2 id="値レシーバ"><a href="#値レシーバ" class="headerlink" title="値レシーバ"></a>値レシーバ</h2><p>「値型」に対してメソッド定義されたものが「値レシーバ」です。 Go 言語では構造体は値なので、以下の例では <code>Person</code> という値型に対して <code>Greet()</code> というメソッドを定義しています。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; Name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Person 型に対してメソッドを定義する</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">Greet</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s, I'm %s.\n"</span>, msg, p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    p := Person&#123;Name: <span class="string">"Taro"</span>&#125; <span class="comment">// 値型の変数を用意する</span></span><br><span class="line">    p.Greet(<span class="string">"Hi"</span>)             <span class="comment">//=&gt; Hi, I'm Taro.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ポインタレシーバ"><a href="#ポインタレシーバ" class="headerlink" title="ポインタレシーバ"></a>ポインタレシーバ</h2><p>「ポインタ型」に対してメソッド定義されたものが「ポインタレシーバ」です。以下の例では <code>*Person</code> というポインタ型に対して <code>Shout()</code> というメソッドを定義しています。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; Name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// *Person 型に対してメソッドを定義する</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pp *Person)</span> <span class="title">Shout</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s!!!\n"</span>, msg)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    pp := &amp;Person&#123;Name: <span class="string">"Taro"</span>&#125; <span class="comment">// ポインタ型の変数を用意する</span></span><br><span class="line">    pp.Shout(<span class="string">"OH MY GOD"</span>)       <span class="comment">//=&gt; OH MY GOD!!!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="コンパイラによるレシーバの暗黙的変換"><a href="#コンパイラによるレシーバの暗黙的変換" class="headerlink" title="コンパイラによるレシーバの暗黙的変換"></a>コンパイラによるレシーバの暗黙的変換</h1><p>しかし実際には、メソッド呼び出し時にこのあたりのことを意識しなくてもすみます。それは <a href="http://golang.jp/go_spec#Calls" target="_blank" rel="noopener">Go 言語仕様の「呼び出し」のセクションにある通り</a>、レシーバの【値型 ⇔ ポインタ型】間の変換はコンパイラが暗黙的におこなってくれるからです。それぞれ例を見てみましょう。</p>
+<h2 id="値レシーバの場合"><a href="#値レシーバの場合" class="headerlink" title="値レシーバの場合"></a>値レシーバの場合</h2><p>値型に対してあるメソッドが定義されているときに、ポインタ型変数からそのメソッドを呼び出そうとすると、コンパイラが暗黙的に値型のメソッド呼び出しに変換してくれます。以下の例では、 値型 <code>Person</code> に <code>Greet()</code> が定義されていますが、 <code>*Person</code> 型変数 <code>pp</code> からでも問題なく呼び出せます。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; Name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Person 型に対してメソッドを定義する</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">Greet</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s, I'm %s.\n"</span>, msg, p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    pp := &amp;Person&#123;Name: <span class="string">"Taro"</span>&#125; <span class="comment">// ポインタ型の変数を用意する</span></span><br><span class="line">    (*pp).Greet(<span class="string">"Hi"</span>)           <span class="comment">//=&gt; Hi, I'm Taro. | 当然呼び出せる</span></span><br><span class="line">    pp.Greet(<span class="string">"Hi"</span>)              <span class="comment">//=&gt; Hi, I'm Taro. | コンパイラが上のコードに変換してくれる</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>したがって、以下のように <code>nil</code> ポインタ変数から呼び出そうとすると <code>panic</code> を起こします。 <code>*nilp</code> が存在しないからです。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> nilp *Person <span class="comment">// nil ポインタ変数だと...</span></span><br><span class="line">nilp.Greet(<span class="string">"Hi"</span>) <span class="comment">//=&gt; panic: runtime error: invalid memory address or nil pointer dereference</span></span><br></pre></td></tr></table></figure>
+<p>これは <code>Greet()</code> の中で <code>p.Name</code> を使っていることとは関係なく発生します。</p>
+<p>上記コードの Playground: <a href="http://play.golang.org/p/SZOv0hTicF" target="_blank" rel="noopener">http://play.golang.org/p/SZOv0hTicF</a></p>
+<h2 id="ポインタレシーバの場合"><a href="#ポインタレシーバの場合" class="headerlink" title="ポインタレシーバの場合"></a>ポインタレシーバの場合</h2><p>一方、ポインタ型に対してあるメソッドが定義されているときに、値型変数からそのメソッドを呼び出そうとすると、コンパイラが暗黙的にポインタ型のメソッド呼び出しに変換してくれます。以下の例では、 ポインタ型 <code>*Person</code> に <code>Shout()</code> が定義されていますが、 <code>Person</code> 型変数 <code>p</code> からでも問題なく呼び出せます。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; Name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// *Person 型に対してメソッドを定義する</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pp *Person)</span> <span class="title">Shout</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s!!!\n"</span>, msg)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    p := Person&#123;Name: <span class="string">"Taro"</span>&#125; <span class="comment">// 値型の変数を用意する</span></span><br><span class="line">    (&amp;p).Shout(<span class="string">"OH MY GOD"</span>)   <span class="comment">//=&gt; OH MY GOD!!! | 当然呼び出せる</span></span><br><span class="line">    p.Shout(<span class="string">"OH MY GOD"</span>)      <span class="comment">//=&gt; OH MY GOD!!! | コンパイラが上のコードに変換してくれる</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上記コードの Playground: <a href="http://play.golang.org/p/Vs-LOJq_1d" target="_blank" rel="noopener">http://play.golang.org/p/Vs-LOJq_1d</a></p>
+<p>さらに、ポインタレシーバのメソッドは <code>nil</code> ポインタ変数からでも呼び出しが可能です。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> nilp *Person        <span class="comment">// nil ポインタ変数でも...</span></span><br><span class="line">nilp.Shout(<span class="string">"OH MY GOD"</span>) <span class="comment">//=&gt; OH MY GOD!!! | ちゃんと呼び出せる</span></span><br></pre></td></tr></table></figure>
+<p>ただし当然のことながら、<strong>メソッド内でフィールドを使っていたら参照先がないので <code>panic</code> になります</strong>。以下の例では、 <code>p.Name</code> を使っているメソッド <code>ShoutName</code> を <code>nil</code> ポインタ変数から呼び出すと、メソッド呼び出しそのものは正常におこなわれるものの、フィールド呼び出しがあるせいで <code>panic</code> になります。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; Name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// *Person 型に対してメソッドを定義する</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Person)</span> <span class="title">ShoutName</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"I'm %s!!!\n"</span>, p.Name) <span class="comment">// p.Name フィールドを呼び出していると...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> nilp *Person <span class="comment">// nil ポインタだと...</span></span><br><span class="line">    nilp.ShoutName() <span class="comment">//=&gt; panic: runtime error: invalid memory address or nil pointer dereference</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上記コードの Playground: <a href="http://play.golang.org/p/UzB32jpi2q" target="_blank" rel="noopener">http://play.golang.org/p/UzB32jpi2q</a></p>
+<h1 id="メソッド定義とメソッド呼び出しの真実"><a href="#メソッド定義とメソッド呼び出しの真実" class="headerlink" title="メソッド定義とメソッド呼び出しの真実"></a>メソッド定義とメソッド呼び出しの真実</h1><h2 id="メソッド定義の真実"><a href="#メソッド定義の真実" class="headerlink" title="メソッド定義の真実"></a>メソッド定義の真実</h2><p>メソッド定義は本質的には関数定義と等価です。 Go 言語の場合</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">Greet</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>というメソッド定義は、内部的には</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Person</span>.<span class="title">Greet</span><span class="params">(p Person, msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>という<strong>「メソッド式 (method expression)」</strong>と呼ばれる関数として定義されます。これは値レシーバの場合で、同様にポインタレシーバの場合</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pp *Person)</span> <span class="title">Shout</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>は</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(*Person)</span>.<span class="title">Shout</span><span class="params">(pp *Person, msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>という関数として定義されます。</p>
+<h2 id="コンパイラのソースコードを確かめる"><a href="#コンパイラのソースコードを確かめる" class="headerlink" title="コンパイラのソースコードを確かめる"></a>コンパイラのソースコードを確かめる</h2><p>Go 1.5.2 のソースコードを基にこのことを確かめてみましょう。該当箇所は以下になります (コメントはすべて僕が追記したものです)。</p>
+<p><a href="https://github.com/golang/go/blob/release-branch.go1.5/src/cmd/compile/internal/gc/dcl.go#L1325-L1350" target="_blank" rel="noopener">src/cmd/compile/internal/gc/dcl.go#L1325-L1350</a></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// n: メソッドを表す AST ノード</span></span><br><span class="line"><span class="comment">// t: メソッドをもつ型を表す AST ノード</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">methodname1</span><span class="params">(n *Node, t *Node)</span> *<span class="title">Node</span></span> &#123;</span><br><span class="line">	star := <span class="string">""</span></span><br><span class="line">	<span class="keyword">if</span> t.Op == OIND &#123;</span><br><span class="line">		star = <span class="string">"*"</span></span><br><span class="line">		t = t.Left</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> t.Sym == <span class="literal">nil</span> || isblank(n) &#123;</span><br><span class="line">		<span class="keyword">return</span> newfuncname(n.Sym)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> p <span class="keyword">string</span></span><br><span class="line">	<span class="keyword">if</span> star != <span class="string">""</span> &#123;</span><br><span class="line">		p = fmt.Sprintf(<span class="string">"(%s%v).%v"</span>, star, t.Sym, n.Sym) <span class="comment">// (*Type).Method</span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		p = fmt.Sprintf(<span class="string">"%v.%v"</span>, t.Sym, n.Sym)           <span class="comment">// Type.Method</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> exportname(t.Sym.Name) &#123;</span><br><span class="line">		n = newfuncname(Lookup(p))</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		n = newfuncname(Pkglookup(p, t.Sym.Pkg))</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> n</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上記コードの変数 <code>p</code> を見ていただくとわかる通り、メソッド定義においてメソッド名は <code>(*Type).Method</code> または <code>Type.Method</code> という名前をもつ、関数の AST ノードに変換されています。</p>
+<h2 id="メソッド呼び出しの真実"><a href="#メソッド呼び出しの真実" class="headerlink" title="メソッド呼び出しの真実"></a>メソッド呼び出しの真実</h2><p>メソッド定義と同様に、メソッド呼び出しもメソッド式という関数の呼び出しの糖衣構文にすぎません。たとえば、以下の例では <code>p.Greet(...)</code> と <code>Person.Greet(p, ...)</code> 、 <code>pp.Shout(...)</code> と <code>(*Person).Shout(pp, ...)</code> はそれぞれ等価です。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; Name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">Greet</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s, I'm %s.\n"</span>, msg, p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Person)</span> <span class="title">Shout</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s!!!\n"</span>, msg)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    p := Person&#123;Name: <span class="string">"Taro"</span>&#125;</span><br><span class="line">    <span class="comment">// 以下は等価</span></span><br><span class="line">    p.Greet(<span class="string">"Hi"</span>)         <span class="comment">//=&gt; Hi, I'm Taro.</span></span><br><span class="line">    Person.Greet(p, <span class="string">"Hi"</span>) <span class="comment">//=&gt; Hi, I'm Taro.</span></span><br><span class="line"></span><br><span class="line">    pp := &amp;Person&#123;Name: <span class="string">"Taro"</span>&#125;</span><br><span class="line">    <span class="comment">// 以下は等価</span></span><br><span class="line">    pp.Shout(<span class="string">"OH MY GOD"</span>)            <span class="comment">//=&gt; OH MY GOD!!!</span></span><br><span class="line">    (*Person).Shout(pp, <span class="string">"OH MY GOD"</span>) <span class="comment">//=&gt; OH MY GOD!!!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上記コードの Playground: <a href="http://play.golang.org/p/3ENNQWghCX" target="_blank" rel="noopener">http://play.golang.org/p/3ENNQWghCX</a></p>
+<p>ちなみに、メソッド式やメソッドは値としても扱えるので、以下のように変数に代入して利用することもできます。この場合、メソッド式 <code>f</code> にはレシーバ引数が必要で、メソッド値 <code>g</code> には必要ないことに注意してください。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; Name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">Greet</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s, I'm %s.\n"</span>, msg, p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    p := Person&#123;Name: <span class="string">"Taro"</span>&#125;</span><br><span class="line">    f := Person.Greet</span><br><span class="line">    g := p.Greet</span><br><span class="line"></span><br><span class="line">    f(p, <span class="string">"Hello"</span>) <span class="comment">//=&gt; Hello, I'm Taro.</span></span><br><span class="line">    g(<span class="string">"Hello"</span>)    <span class="comment">//=&gt; Hello, I'm Taro.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上記コードの Playground: <a href="http://play.golang.org/p/kpaGwzPu1u" target="_blank" rel="noopener">http://play.golang.org/p/kpaGwzPu1u</a></p>
+<p>Go は関数が第一級オブジェクトなので便利ですね。</p>
+<h1 id="メソッド定義で意識すべきこと"><a href="#メソッド定義で意識すべきこと" class="headerlink" title="メソッド定義で意識すべきこと"></a>メソッド定義で意識すべきこと</h1><p>改めて強調すると、メソッド定義において意識すべきなのは、<strong>レシーバが「第0引数」である</strong>ということです。たとえば、以下のメソッド定義</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; Name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">Greet</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s, I'm %s.\n"</span>, msg, p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pp *Person)</span> <span class="title">Shout</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s!!!\n"</span>, msg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>は、内部的には</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Person</span>.<span class="title">Greet</span><span class="params">(p Person, msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s, I'm %s.\n"</span>, msg, p.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(*Person)</span>.<span class="title">Shout</span><span class="params">(pp *Person, msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s!!!\n"</span>, msg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>というメソッド式（関数）として定義されます。ただし直接このような関数名での関数定義はできません（コンパイラが <code>.</code> を含むシンボル名を許していないので）。</p>
+<p>そして、メソッド呼び出しがメソッド式呼び出しと等価ということは、メソッド定義をする際には以下のことに気をつける必要があります。</p>
+<h2 id="1-メソッド呼び出しごとにレシーバの値はコピーされる"><a href="#1-メソッド呼び出しごとにレシーバの値はコピーされる" class="headerlink" title="1. メソッド呼び出しごとにレシーバの値はコピーされる"></a>1. メソッド呼び出しごとにレシーバの値はコピーされる</h2><p>関数呼び出しごとに引数の値はスタックにコピーされますので、当然メソッド呼び出し時にはレシーバの値もコピーされます。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p := Person&#123;Name: <span class="string">"Taro"</span>&#125;</span><br><span class="line">Person.Greet(p, <span class="string">"Hi"</span>) <span class="comment">// p の値はコピーされてメソッド内で使われます</span></span><br><span class="line">p.Greet(<span class="string">"Hi"</span>)         <span class="comment">// p の値はコピーされてメソッド内で使われます</span></span><br></pre></td></tr></table></figure>
+<p>したがって、特にデータ量の大きな構造体に値レシーバのメソッドを定義すると、メソッド呼び出しごとにコピーが発生するので非常に非効率であることがわかります。このことから、構造体におけるメソッド定義は原則ポインタレシーバに対しておこなったほうがよいです。</p>
+<h2 id="2-値レシーバの値はメソッド内で書き換えても元のレシーバの値にはまったく影響がない"><a href="#2-値レシーバの値はメソッド内で書き換えても元のレシーバの値にはまったく影響がない" class="headerlink" title="2. 値レシーバの値はメソッド内で書き換えても元のレシーバの値にはまったく影響がない"></a>2. 値レシーバの値はメソッド内で書き換えても元のレシーバの値にはまったく影響がない</h2><p>値レシーバの場合、値そのものがまるっとコピーされるので、メソッド内でいくら値を書き換えても元のレシーバの値にはまったく影響がありません。</p>
+<p>以下の例の場合、 <code>UnchangeName()</code> の処理は一見 setter っぽくレシーバの <code>name</code> を書き換えているように見えますが、 <code>p</code> が値レシーバなので <code>p.Greet()</code> で表示される名前は <code>Jiro</code> ではなく <code>Taro</code> のままになります。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">Greet</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s, I'm %s.\n"</span>, msg, p.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">UnchangeName</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    p.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    p := Person&#123;name: <span class="string">"Taro"</span>&#125;</span><br><span class="line">    <span class="comment">// p の値はコピーされるので、フィールドを書き換えても影響ない</span></span><br><span class="line">    Person.UnchangeName(p, <span class="string">"Jiro"</span>)</span><br><span class="line">    p.UnchangeName(<span class="string">"Jiro"</span>)</span><br><span class="line"></span><br><span class="line">    p.Greet(<span class="string">"Hi"</span>) <span class="comment">//=&gt; Hi, I'm Taro.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上記コードの Playground: <a href="http://play.golang.org/p/5kJVlx_XY7" target="_blank" rel="noopener">http://play.golang.org/p/5kJVlx_XY7</a></p>
+<p>このことを利用すると、不変オブジェクトをつくることができます。その典型例が <code>time</code> パッケージの <code>Time</code> です。</p>
+<h3 id="time-Time-は不変オブジェクト"><a href="#time-Time-は不変オブジェクト" class="headerlink" title="time.Time は不変オブジェクト"></a><code>time.Time</code> は不変オブジェクト</h3><p><a href="https://golang.org/pkg/time/" target="_blank" rel="noopener"><code>time.Time</code> の API 一覧</a>を見てもらうとわかる通り、 <code>Time</code> オブジェクトは</p>
+<ul>
+<li>フィールドがすべてプライベート</li>
+<li>レシーバは Unmarshal 系を除きすべて <code>Time</code> 型（値型）</li>
+<li>オブジェクトを返すメソッドの戻り値もすべて <code>Time</code> 型（値型）</li>
+</ul>
+<p>となっており、 <code>*Time</code> 型（ポインタ型）は基本的に現れません。</p>
+<p>フィールドがプライベートなので直接の値の変更ができず、またレシーバも戻り値もほぼすべてポインタ型ではなく値型なので、一度生成された <code>Time</code> オブジェクトは一切変更する手段がないということになります。</p>
+<p>Java では <code>java.util.Date</code> クラスや <code>java.util.Calendar</code> クラスが可変でスレッドセーフではないことが長年問題となっており、やっと Java 8 で不変オブジェクトを基本とする <code>java.time</code> パッケージが導入されました（<a href="http://www.oracle.com/technetwork/jp/articles/java/jf14-date-time-2125367-ja.html" target="_blank" rel="noopener">Java SE 8 Date and Time -新しい日付/時間ライブラリが必要になる理由-</a>）。 Go では少なくともこの種の問題は避けられているわけですね。</p>
+<p>それでも Go ではエクスポートされたフィールドの直接書き換えや、オブジェクトの内部状態を書き換える副作用のあるメソッドが気軽に用いられる傾向にあります。並行処理に耐える不変オブジェクトを設計したい場合は、 <code>Time</code> を参考にした構造体設計にするとよいかもしれません。</p>
+<h2 id="3-ポインタレシーバにするとメソッド内でレシーバの値を書き換えられる"><a href="#3-ポインタレシーバにするとメソッド内でレシーバの値を書き換えられる" class="headerlink" title="3. ポインタレシーバにするとメソッド内でレシーバの値を書き換えられる"></a>3. ポインタレシーバにするとメソッド内でレシーバの値を書き換えられる</h2><p>一方、レシーバをポインタレシーバにした場合、メソッド呼び出し時にコピーされるのもポインタになるので、そのポインタを使うことでレシーバの実際の値を書き換えることができます（ただし <code>map</code> や <code>chan</code> などの参照型をベースとする型は半分ポインタみたいなものなので、値レシーバでも可能ですが）。</p>
+<p>たとえば以下の例の場合、 <code>ChangeName()</code> メソッドのレシーバは <code>*Person</code> なので、 <code>p.name</code> フィールドを書き換えることが可能であり、 <code>p.Greet()</code> で表示される名前は <code>Jiro</code> に変化します。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewPerson</span><span class="params">(name <span class="keyword">string</span>)</span> *<span class="title">Person</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;Person&#123;name: name&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// p の値を変更したいのでポインタレシーバで定義する</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Person)</span> <span class="title">ChangeName</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    p.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    p := NewPerson(<span class="string">"Taro"</span>)</span><br><span class="line">    p.ChangeName(<span class="string">"Jiro"</span>)</span><br><span class="line"></span><br><span class="line">    p.Greet(<span class="string">"Hi"</span>) <span class="comment">//=&gt; Hi, I'm Jiro.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上記コードの Playground: <a href="http://play.golang.org/p/asH9DZRmxG" target="_blank" rel="noopener">http://play.golang.org/p/asH9DZRmxG</a></p>
+<p>逆に言うと、レシーバの内部状態を変更したいメソッドは、（参照型を除き）<strong>必ずポインタレシーバで定義しなければなりません</strong>。</p>
+<h2 id="4-ポインタレシーバのメソッド内でフィールドを呼び出す場合には、その前に-nil-チェックをすべき"><a href="#4-ポインタレシーバのメソッド内でフィールドを呼び出す場合には、その前に-nil-チェックをすべき" class="headerlink" title="4. ポインタレシーバのメソッド内でフィールドを呼び出す場合には、その前に nil チェックをすべき"></a>4. ポインタレシーバのメソッド内でフィールドを呼び出す場合には、その前に <code>nil</code> チェックをすべき</h2><p>ポインタレシーバのメソッドは <code>nil</code> ポインタ変数からでも呼び出しが可能なため、ポインタレシーバのメソッド内でフィールドを呼び出している場合、常に <code>nil pointer dereference</code> で <code>panic</code> になる危険性を孕んでいます。</p>
+<p>以下の例の場合、 <code>ChangeNameUnsafe()</code> には <code>nil</code> チェックがないため <code>panic</code> になりますが、 <code>ChangeNameSafe()</code> のほうは <code>nil</code> チェックをしているため安全です。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Person)</span> <span class="title">ChangeNameUnsafe</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// これだけだと危険</span></span><br><span class="line">    p.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Person)</span> <span class="title">ChangeNameSafe</span><span class="params">(name <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 他の言語だと this == nil みたいなものだから変な感じがするが、</span></span><br><span class="line">    <span class="comment">// きちんとガード句を設けておけば安全</span></span><br><span class="line">    <span class="keyword">if</span> p == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    p.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> pp *Person              <span class="comment">// nil ポインタ変数だと...</span></span><br><span class="line">    pp.ChangeNameUnsafe(<span class="string">"Jiro"</span>) <span class="comment">//=&gt; panic: runtime error: invalid memory address or nil pointer dereference</span></span><br><span class="line">    pp.ChangeNameSafe(<span class="string">"Jiro"</span>)   <span class="comment">// こちらは安全</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>レシーバは他の言語でいう <code>this</code> や <code>self</code> などに相当するため、メソッド内で <code>nil</code> チェックをすることには違和感があるかもしれません。しかし<strong>「レシーバは第0引数」</strong>であることを思い出せば、他のポインタ引数の <code>nil</code> チェックと同様に考えて、安全なプログラムを書くためにきちんとやったほうがよいです（僕もよく忘れますが）。</p>
+<p>逆に考えると、 Java などと違いメソッド内でレシーバが <code>nil</code> か否かに応じたハンドリングができるので、それがきちんとなされていれば、メソッド呼び出し側が事前の <code>nil</code> チェックをする必要がないありがたさもあります。</p>
+<h3 id="レシーバの値を使わない場合はレシーバ変数を記述しなくてもよい"><a href="#レシーバの値を使わない場合はレシーバ変数を記述しなくてもよい" class="headerlink" title="レシーバの値を使わない場合はレシーバ変数を記述しなくてもよい"></a>レシーバの値を使わない場合はレシーバ変数を記述しなくてもよい</h3><p>上記のことに関連して、実はメソッド定義におけるレシーバ変数は書かなくても問題なくコンパイルできるため、メソッド内でレシーバの値を使わない場合は書かないのも1つの手です。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span>&#123; name <span class="keyword">string</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// p の値を使わないときは書かない</span></span><br><span class="line"><span class="comment">//    ↓</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(*Person)</span> <span class="title">Shout</span><span class="params">(msg <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%s!!!\n"</span>, msg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>そのような処理は本質的にはメソッドにする必要がなく、単なる関数のままでもよいため、このようなケースはあまり多くないとは思います。ただ、パッとシグニチャを見ただけでレシーバの値が使われていないことがわかるので、ドキュメントとしての価値もあると思います。</p>
+<h1 id="まとめ：値レシーバとポインタレシーバの使い分け"><a href="#まとめ：値レシーバとポインタレシーバの使い分け" class="headerlink" title="まとめ：値レシーバとポインタレシーバの使い分け"></a>まとめ：値レシーバとポインタレシーバの使い分け</h1><p>最後に、値レシーバとポインタレシーバの使い分けについて整理しておきたいと思います。</p>
+<h2 id="基本はポインタレシーバ"><a href="#基本はポインタレシーバ" class="headerlink" title="基本はポインタレシーバ"></a>基本はポインタレシーバ</h2><p>レシーバの値を変更したい場合は（参照型を除き）必ずポインタレシーバにしなければなりません。構造体も基本的にはポインタレシーバにしたほうがよいでしょう。</p>
+<p>また、統一性の観点からも、ある型のメソッドのレシーバを1つでもポインタレシーバにした場合には、値の変更の有無にかかわらずすべてポインタレシーバにしたほうがよいと思います。</p>
+<h2 id="値レシーバにしたほうがよい場合"><a href="#値レシーバにしたほうがよい場合" class="headerlink" title="値レシーバにしたほうがよい場合"></a>値レシーバにしたほうがよい場合</h2><p><strong>レシーバの値を変更する必要がなく</strong>、かつ以下のどれかに該当するときは値レシーバにしたほうがよいです。ただし参照型の場合は値の変更の有無は関係ありません。</p>
+<h3 id="int-string-などのプリミティブ型をベースとする型"><a href="#int-string-などのプリミティブ型をベースとする型" class="headerlink" title="int, string などのプリミティブ型をベースとする型"></a><code>int</code>, <code>string</code> などのプリミティブ型をベースとする型</h3><p>プリミティブ型はコピーコストが小さいため、通常は値レシーバにします。</p>
+<h3 id="map-chan-といった参照型をベースとする型"><a href="#map-chan-といった参照型をベースとする型" class="headerlink" title="map, chan といった参照型をベースとする型"></a><code>map</code>, <code>chan</code> といった参照型をベースとする型</h3><p>参照型は半分ポインタみたいなものなので、値レシーバのままでも保持する要素の値を変更できます。コピーコストも大きくないため、通常は値レシーバにします。</p>
+<h3 id="不変型"><a href="#不変型" class="headerlink" title="不変型"></a>不変型</h3><p>先に例として出した <code>time.Time</code> のような不変型を定義したい場合には、すべて値レシーバとして定義するのも良い方法です。</p>
+<h3 id="小さい構造体"><a href="#小さい構造体" class="headerlink" title="小さい構造体"></a>小さい構造体</h3><p>コピーコストの小さい構造体の場合には、値レシーバでメソッドを定義すると処理がスタックで完結するので、ヒープへのアロケート回数や GC の回数が減ることが期待できます。</p>
+<p>ただし<strong>この使い分けは感覚的におこなうのではなく、本当に効率的になるのかきちんと計測した結果に基いておこなうべき</strong>です。 Go 言語ではベンチマークの計測や pprof などによる解析が容易におこなえるので、これらを活用するとよいでしょう。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/12/29/value-receiver-pointer-receiver/" data-id="cjepfn0od000ourcq2svgfqw7" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/12/29/value-receiver-pointer-receiver/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/">Go</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/02/hyuki-crypt-book-go-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/11/22/docker-machine-plugin/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Docker Machine v0.5 の Driver Plugins の仕組み</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Aerospike/">Aerospike</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Amazon-EC2/">Amazon EC2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/">Ant</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boot2Docker/">Boot2Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CLI/">CLI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cryptography/">Cryptography</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DES/">DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Machine/">Docker Machine</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Remote-API/">Docker Remote API</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Driver-Plugins/">Driver Plugins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPie/">HTTPie</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVS/">KVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/">Maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Play-Framework/">Play Framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rijndael/">Rijndael</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ruby/">Ruby</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RubyGems/">RubyGems</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Triple-DES/">Triple DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/">VirtualBox</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aql/">aql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bashrc/">bashrc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sbt/">sbt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-script/">shell script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wercker/">wercker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zshrc/">zshrc</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 12.5px;">AES</a> <a href="/tags/Aerospike/" style="font-size: 12.5px;">Aerospike</a> <a href="/tags/Amazon-EC2/" style="font-size: 10px;">Amazon EC2</a> <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/Ant/" style="font-size: 10px;">Ant</a> <a href="/tags/Boot2Docker/" style="font-size: 10px;">Boot2Docker</a> <a href="/tags/CBC-Mode/" style="font-size: 10px;">CBC Mode</a> <a href="/tags/CLI/" style="font-size: 10px;">CLI</a> <a href="/tags/Cryptography/" style="font-size: 15px;">Cryptography</a> <a href="/tags/DES/" style="font-size: 10px;">DES</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Docker-Machine/" style="font-size: 15px;">Docker Machine</a> <a href="/tags/Docker-Remote-API/" style="font-size: 10px;">Docker Remote API</a> <a href="/tags/Driver-Plugins/" style="font-size: 10px;">Driver Plugins</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Go/" style="font-size: 20px;">Go</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/HTTPie/" style="font-size: 10px;">HTTPie</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/KVS/" style="font-size: 10px;">KVS</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Play-Framework/" style="font-size: 10px;">Play Framework</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/Rijndael/" style="font-size: 10px;">Rijndael</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/RubyGems/" style="font-size: 10px;">RubyGems</a> <a href="/tags/Scala/" style="font-size: 10px;">Scala</a> <a href="/tags/Triple-DES/" style="font-size: 10px;">Triple DES</a> <a href="/tags/VirtualBox/" style="font-size: 12.5px;">VirtualBox</a> <a href="/tags/aql/" style="font-size: 10px;">aql</a> <a href="/tags/bashrc/" style="font-size: 10px;">bashrc</a> <a href="/tags/sbt/" style="font-size: 10px;">sbt</a> <a href="/tags/shell-script/" style="font-size: 10px;">shell script</a> <a href="/tags/wercker/" style="font-size: 15px;">wercker</a> <a href="/tags/zshrc/" style="font-size: 10px;">zshrc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">3月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">1月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">12月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">11月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">10月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">8月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">7月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">6月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">5月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">4月 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/06/hyuki-crypt-book-go-3/">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/19/hyuki-crypt-book-go-2/">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/02/hyuki-crypt-book-go-1/">Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/29/value-receiver-pointer-receiver/">Go 言語の値レシーバとポインタレシーバ</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/22/docker-machine-plugin/">Docker Machine v0.5 の Driver Plugins の仕組み</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 skatsuta<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'skatsutagithubio';
+  
+  var disqus_url = 'https://skatsuta.github.io/2015/12/29/value-receiver-pointer-receiver/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62443224-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

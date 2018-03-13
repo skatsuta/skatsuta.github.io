@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>wercker 上で Java / Scala プロジェクトの依存ライブラリをキャッシュする | Step by Step</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="wercker は今ある CI サービスの中ではもっともイケてるものだと思います。 box と step という仕組みにより、ビルドをおこなう環境とビルド処理を分離し、再利用性を高めています。最近 Docker にも対応したようです。まだ Beta 期間中のため、プライベートリポジトリも無料で利用できます。 最近、 Play Framework を使ったプロジェクトの開発でこの wercker を">
+<meta name="keywords" content="wercker,Java,Scala,Play Framework,Ant,Maven,Gradle,sbt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wercker 上で Java &#x2F; Scala プロジェクトの依存ライブラリをキャッシュする">
+<meta property="og:url" content="https://skatsuta.github.io/2015/06/07/java-werkcer/index.html">
+<meta property="og:site_name" content="Step by Step">
+<meta property="og:description" content="wercker は今ある CI サービスの中ではもっともイケてるものだと思います。 box と step という仕組みにより、ビルドをおこなう環境とビルド処理を分離し、再利用性を高めています。最近 Docker にも対応したようです。まだ Beta 期間中のため、プライベートリポジトリも無料で利用できます。 最近、 Play Framework を使ったプロジェクトの開発でこの wercker を">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:updated_time" content="2018-03-13T08:06:37.811Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="wercker 上で Java &#x2F; Scala プロジェクトの依存ライブラリをキャッシュする">
+<meta name="twitter:description" content="wercker は今ある CI サービスの中ではもっともイケてるものだと思います。 box と step という仕組みにより、ビルドをおこなう環境とビルド処理を分離し、再利用性を高めています。最近 Docker にも対応したようです。まだ Beta 期間中のため、プライベートリポジトリも無料で利用できます。 最近、 Play Framework を使ったプロジェクトの開発でこの wercker を">
+  
+    <link rel="alternative" href="/atom.xml" title="Step by Step" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-62443224-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Step by Step</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">1歩ずつ 確実に 進歩していこう</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.google.com/search" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="q" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="hidden" name="sitesearch" value="skatsuta.github.io">
+          <input type="submit" value="" class="search-form-submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-java-werkcer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/06/07/java-werkcer/" class="article-date">
+  <time datetime="2015-06-07T08:52:34.000Z" itemprop="datePublished">2015-06-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      wercker 上で Java / Scala プロジェクトの依存ライブラリをキャッシュする
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://wercker.com" target="_blank" rel="noopener">wercker</a> は今ある CI サービスの中ではもっともイケてるものだと思います。 box と step という仕組みにより、ビルドをおこなう環境とビルド処理を分離し、再利用性を高めています。<a href="http://blog.wercker.com/2015/04/02/Introducing-our-docker-stack.html" target="_blank" rel="noopener">最近 Docker にも対応したようです</a>。まだ Beta 期間中のため、プライベートリポジトリも無料で利用できます。</p>
+<p>最近、 <a href="https://www.playframework.com/" target="_blank" rel="noopener">Play Framework</a> を使ったプロジェクトの開発でこの wercker を使用してみたのですが、試しにビルドしてみたら何と<strong>2回め以降のビルドでも毎回依存ライブラリをすべてダウンロードしているではないですか!!!</strong></p>
+<p>これは困った…どうにかならないもんか…と思ってやってみたのがこの記事です。</p>
+<p>僕が今回取り組んだのが <a href="https://www.playframework.com/" target="_blank" rel="noopener">Play Framework</a> を使ったプロジェクトだったため、それを題材に書きますが、本質的には Ant だろうと Maven だろうと Gradle だろうと sbt だろうと、もっと言えば Java / Scala に限らずどの言語のプロジェクトでも同じようにできるはずです。ぶっちゃけた話、単に rsync を使って自力でキャッシュを保存/復元しているだけですので。</p>
+<h2 id="キャッシュのためのディレクティブがない-wercker"><a href="#キャッシュのためのディレクティブがない-wercker" class="headerlink" title="キャッシュのためのディレクティブがない wercker"></a>キャッシュのためのディレクティブがない wercker</h2><p>メジャーな CI サービスにはキャッシュを制御するディレクティブが用意されているものもあります。<br>たとえば <a href="https://travis-ci.org/" target="_blank" rel="noopener">Travis CI</a> では</p>
+<h5 id="travis-yml"><a href="#travis-yml" class="headerlink" title=".travis.yml"></a>.travis.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cache:</span></span><br><span class="line"><span class="attr">  directories:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">vendor/bundle</span></span><br></pre></td></tr></table></figure>
+<p>と書いておけば <code>vendor/bundle</code> がキャッシュされます。<br><a href="https://circleci.com/" target="_blank" rel="noopener">CircleCI</a> は至れり尽くせりで、 Java / Scala のプロジェクトの場合には</p>
+<ul>
+<li><code>~/.m2</code></li>
+<li><code>~/.ivy2</code></li>
+<li><code>~/.gradle</code></li>
+<li><code>~/.play</code></li>
+</ul>
+<p>を自動で（暗黙的に）キャッシュしてくれますし、明示的にキャッシュしたいものは</p>
+<h5 id="circle-yml"><a href="#circle-yml" class="headerlink" title="circle.yml"></a>circle.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dependencies:</span></span><br><span class="line"><span class="attr">  cache_directories:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">~/.sbt</span></span><br></pre></td></tr></table></figure>
+<p>のように書いておけば <code>~/.sbt</code> がキャッシュされます。</p>
+<p>一方 wercker はまだ若いサービスのためか、上記のようなキャッシュ機構がきちんと整っておらず、今のところ用意されているのは環境変数 <strong><code>$WERCKER_CACHE_DIR</code></strong> のみのようです (少なくとも僕が探した限りは見つかりませんでした)。</p>
+<p>ビルドのたびに依存ライブラリを1からダウンロードされてはたまったもんじゃないので、何とかキャッシュの仕組みを作れないかとやってみました。</p>
+<h2 id="参考サイト"><a href="#参考サイト" class="headerlink" title="参考サイト"></a>参考サイト</h2><p>以下の wercker の公式ブログの記事を参考にさせていただきました。</p>
+<ul>
+<li><a href="http://blog.wercker.com/2013/07/25/improving-Go-build-time-with-wercker-cache.html" target="_blank" rel="noopener">Improving golang build times with the wercker cache</a></li>
+</ul>
+<p>上記記事では Go のプロジェクトにおいて、 <code>go get</code> してきた依存ライブラリを rsync を使って <code>$WERCKER_CACHE_DIR</code> に保存したりそこから復元したりして、 ビルド時間を短縮しています。<br>Java や Scala のプロジェクトでも考え方は同じなので、上記記事を参考にして自分なりのやり方を組み立てました。</p>
+<h2 id="要は何をすればよいか"><a href="#要は何をすればよいか" class="headerlink" title="要は何をすればよいか"></a>要は何をすればよいか</h2><ol>
+<li>ビルドステップの最初に <code>$WERCKER_CACHE_DIR</code> からキャッシュを復元する</li>
+<li>ビルドステップの最後に <code>$WERCKER_CACHE_DIR</code> にキャッシュを保存する</li>
+</ol>
+<p>要はこれだけなのですが、</p>
+<ul>
+<li>キャッシュの保存に rsync を使うために、 rsync をインストールした box を作った</li>
+<li>キャッシュの保存/復元作業をまとめたシェルスクリプトを書いた</li>
+</ul>
+<p>ということをしたので、ちょっと手間暇をかけました。</p>
+<h2 id="rsync-をインストールした-box-をつくる"><a href="#rsync-をインストールした-box-をつくる" class="headerlink" title="rsync をインストールした box をつくる"></a>rsync をインストールした box をつくる</h2><p>キャッシュの保存/復元は <code>cp</code> コマンドとかでもいいのでしょうが、<a href="http://blog.wercker.com/2013/07/25/improving-Go-build-time-with-wercker-cache.html" target="_blank" rel="noopener">先の記事</a>でも rsync を使っていましたし、確かに効率を考えると rsync がよさそうです。しかしビルドのたびに rsync をインストールするのも無駄です。そこで、 wercker にはせっかく box という素晴らしい仕組みがあるので、あらかじめ rsync をインストールした box をつくり、それを利用することにしました。</p>
+<p>ありがたいことに、 Java 8 と <a href="http://www.typesafe.com/get-started" target="_blank" rel="noopener">Typesafe Activator</a> をインストールした <a href="https://github.com/mitsuse/wercker-box-activator" target="_blank" rel="noopener">mitsuse/wercker-box-activator</a> という box がすでにありましたので、 fork させていただき、 rsync をインストールする処理を追記しました。</p>
+<ul>
+<li>GitHub repository: <a href="https://github.com/skatsuta/wercker-box-activator" target="_blank" rel="noopener">skatsuta/wercker-box-activator</a></li>
+<li>wercker registory: <a href="https://app.wercker.com/#applications/5561de99be632a8c75080ae9/tab/details" target="_blank" rel="noopener">skatsuta/wercker-box-activator</a></li>
+</ul>
+<h2 id="キャッシュ処理用のシェルスクリプトを書く"><a href="#キャッシュ処理用のシェルスクリプトを書く" class="headerlink" title="キャッシュ処理用のシェルスクリプトを書く"></a>キャッシュ処理用のシェルスクリプトを書く</h2><p>簡単な処理であれば wercker.yml に直接書いてしまえばよいのですが、キャッシュ処理が長くなりそうだったので、シェルスクリプトにまとめることにしました。<br>以下は Play Framework の例です。 Play Framework ではキャッシュディレクトリは <code>~/.ivy2</code> と <code>~/.sbt</code> なので、その2つを指定しています。</p>
+<h5 id="wercker-cache-sh"><a href="#wercker-cache-sh" class="headerlink" title="wercker_cache.sh"></a>wercker_cache.sh</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">#=========================================</span></span><br><span class="line"><span class="comment"># Script for storing and restoring cache</span></span><br><span class="line"><span class="comment">#   in Java / Scala project on werkcer</span></span><br><span class="line"><span class="comment">#=========================================</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># cache directories</span></span><br><span class="line">CACHES=( <span class="string">"ivy2"</span> <span class="string">"sbt"</span> )</span><br><span class="line">CMD=<span class="string">"<span class="variable">$1</span>"</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># check if rsync exists</span></span><br><span class="line"><span class="keyword">if</span> ! <span class="built_in">type</span> rsync &gt; /dev/null; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"[ERROR] rsync needs to be installed."</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># set source and destination directories</span></span><br><span class="line"><span class="keyword">case</span> <span class="variable">$CMD</span> <span class="keyword">in</span></span><br><span class="line">    <span class="string">"store"</span>)</span><br><span class="line">        SRC=<span class="variable">$HOME</span></span><br><span class="line">        DST=<span class="variable">$WERCKER_CACHE_DIR</span></span><br><span class="line">        ;;</span><br><span class="line">    <span class="string">"restore"</span>)</span><br><span class="line">        SRC=<span class="variable">$WERCKER_CACHE_DIR</span></span><br><span class="line">        DST=<span class="variable">$HOME</span></span><br><span class="line">        ;;</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># run rsync</span></span><br><span class="line"><span class="keyword">for</span> cache <span class="keyword">in</span> <span class="string">"<span class="variable">$&#123;CACHES[@]&#125;</span>"</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">test</span> -d <span class="variable">$SRC</span>/.<span class="variable">$cache</span>; <span class="keyword">then</span></span><br><span class="line">        rsync -avz <span class="variable">$SRC</span>/.<span class="variable">$cache</span> <span class="variable">$DST</span>/</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>Gist を貼り付けるとレイアウトが崩れてしまうので、 <a href="https://gist.github.com/skatsuta/8f63194dfd65712da640" target="_blank" rel="noopener">Gist 版はこちら</a></p>
+<p>単に rsync で <code>$WERCKER_CACHE_DIR</code> へ保存したり、そこから復元したりしているだけです。<br>このシェルスクリプトをプロジェクトのリポジトリに入れておきます (たとえば <code>sh/wercker_cache.sh</code> など)。</p>
+<h2 id="wercker-yml-にキャッシュの保存-復元処理を書く"><a href="#wercker-yml-にキャッシュの保存-復元処理を書く" class="headerlink" title="wercker.yml にキャッシュの保存/復元処理を書く"></a>wercker.yml にキャッシュの保存/復元処理を書く</h2><p>最後に、 <code>wercker.yml</code> にキャッシュの保存/復元処理を書きます。<br>以下はサンプルで、 <code>sh/wercker_cache.sh</code> に先のスクリプトが入っているとします。</p>
+<h5 id="wercker-yml"><a href="#wercker-yml" class="headerlink" title="wercker.yml"></a>wercker.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">box:</span> <span class="string">skatsuta/activator@0.0.3</span></span><br><span class="line"></span><br><span class="line"><span class="attr">build:</span></span><br><span class="line"><span class="attr">  steps:</span></span><br><span class="line"><span class="attr">    - script:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">restore</span> <span class="string">cache</span></span><br><span class="line"><span class="attr">        code:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          sh/wercker_cache.sh restore</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span><span class="attr">    - script:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">run</span> <span class="string">activator</span> <span class="string">test</span></span><br><span class="line"><span class="attr">        code:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          activator test</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span><span class="attr">    - script:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">store</span> <span class="string">cache</span></span><br><span class="line"><span class="attr">        code:</span> <span class="string">|</span></span><br><span class="line"><span class="string">          sh/wercker_cache.sh store</span></span><br></pre></td></tr></table></figure>
+<p>これで wercker 上でビルドしてみると、2回目以降は <strong>restore cache</strong> というステップで各キャッシュがホームディレクトリに復元され、 <strong>store cache</strong> というステップで前回のキャッシュディレクトリとの差分が保存されていることが確認できると思います。</p>
+<h2 id="ビルド時間の短縮に成功！"><a href="#ビルド時間の短縮に成功！" class="headerlink" title="ビルド時間の短縮に成功！"></a>ビルド時間の短縮に成功！</h2><p>僕のプロジェクトではこのおかげで wercker 上でのビルド時間を<strong>2分弱</strong>短縮することができました。めでたしめでたし。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2015/06/07/java-werkcer/" data-id="cjepfn0o9000kurcqgxm36nx3" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2015/06/07/java-werkcer/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ant/">Ant</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Gradle/">Gradle</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Maven/">Maven</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Play-Framework/">Play Framework</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scala/">Scala</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sbt/">sbt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wercker/">wercker</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/07/21/wercker-github-login/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          GitHub アカウントを使っている場合に wercker CLI で認証を通す方法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/05/01/angularjs-filter-japanese/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">AngularJS のフィルタを日本語表記に合わせる</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Aerospike/">Aerospike</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Amazon-EC2/">Amazon EC2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/">Ant</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boot2Docker/">Boot2Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CLI/">CLI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cryptography/">Cryptography</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DES/">DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Machine/">Docker Machine</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Remote-API/">Docker Remote API</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Driver-Plugins/">Driver Plugins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPie/">HTTPie</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVS/">KVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/">Maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Play-Framework/">Play Framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rijndael/">Rijndael</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ruby/">Ruby</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RubyGems/">RubyGems</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Triple-DES/">Triple DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/">VirtualBox</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aql/">aql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bashrc/">bashrc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sbt/">sbt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-script/">shell script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wercker/">wercker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zshrc/">zshrc</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 12.5px;">AES</a> <a href="/tags/Aerospike/" style="font-size: 12.5px;">Aerospike</a> <a href="/tags/Amazon-EC2/" style="font-size: 10px;">Amazon EC2</a> <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/Ant/" style="font-size: 10px;">Ant</a> <a href="/tags/Boot2Docker/" style="font-size: 10px;">Boot2Docker</a> <a href="/tags/CBC-Mode/" style="font-size: 10px;">CBC Mode</a> <a href="/tags/CLI/" style="font-size: 10px;">CLI</a> <a href="/tags/Cryptography/" style="font-size: 15px;">Cryptography</a> <a href="/tags/DES/" style="font-size: 10px;">DES</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Docker-Machine/" style="font-size: 15px;">Docker Machine</a> <a href="/tags/Docker-Remote-API/" style="font-size: 10px;">Docker Remote API</a> <a href="/tags/Driver-Plugins/" style="font-size: 10px;">Driver Plugins</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Go/" style="font-size: 20px;">Go</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/HTTPie/" style="font-size: 10px;">HTTPie</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/KVS/" style="font-size: 10px;">KVS</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Play-Framework/" style="font-size: 10px;">Play Framework</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/Rijndael/" style="font-size: 10px;">Rijndael</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/RubyGems/" style="font-size: 10px;">RubyGems</a> <a href="/tags/Scala/" style="font-size: 10px;">Scala</a> <a href="/tags/Triple-DES/" style="font-size: 10px;">Triple DES</a> <a href="/tags/VirtualBox/" style="font-size: 12.5px;">VirtualBox</a> <a href="/tags/aql/" style="font-size: 10px;">aql</a> <a href="/tags/bashrc/" style="font-size: 10px;">bashrc</a> <a href="/tags/sbt/" style="font-size: 10px;">sbt</a> <a href="/tags/shell-script/" style="font-size: 10px;">shell script</a> <a href="/tags/wercker/" style="font-size: 15px;">wercker</a> <a href="/tags/zshrc/" style="font-size: 10px;">zshrc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">3月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">1月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">12月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">11月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">10月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">8月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">7月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">6月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">5月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">4月 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/03/06/hyuki-crypt-book-go-3/">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/19/hyuki-crypt-book-go-2/">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/02/hyuki-crypt-book-go-1/">Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/29/value-receiver-pointer-receiver/">Go 言語の値レシーバとポインタレシーバ</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/22/docker-machine-plugin/">Docker Machine v0.5 の Driver Plugins の仕組み</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 skatsuta<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'skatsutagithubio';
+  
+  var disqus_url = 'https://skatsuta.github.io/2015/06/07/java-werkcer/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62443224-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
