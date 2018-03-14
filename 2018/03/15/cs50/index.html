@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Harvard 大学の CS50 という CS 入門用オンラインコースを受講して学んだこと | Step by Step</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="コンピュータサイエンス (CS) の基礎をしっかり勉強しようと思い、とりあえず Open Source Society University (OSSU) で紹介されているカリキュラムが取っ掛かりにはよさそうだったので、まずこちらの CS50’s Introduction to Computer Science という Harvard 大学のオンラインコースを対象にして、 C 言語の講義回である">
+<meta name="keywords" content="CS50,speller,Computer science,edX,Harvard University">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Harvard 大学の CS50 という CS 入門用オンラインコースを受講して学んだこと">
+<meta property="og:url" content="https://skatsuta.github.io/2018/03/15/cs50/index.html">
+<meta property="og:site_name" content="Step by Step">
+<meta property="og:description" content="コンピュータサイエンス (CS) の基礎をしっかり勉強しようと思い、とりあえず Open Source Society University (OSSU) で紹介されているカリキュラムが取っ掛かりにはよさそうだったので、まずこちらの CS50’s Introduction to Computer Science という Harvard 大学のオンラインコースを対象にして、 C 言語の講義回である">
+<meta property="og:locale" content="ja-JP">
+<meta property="og:image" content="https://skatsuta.github.io/images/2018-03-15-speller-3rd.jpg">
+<meta property="og:updated_time" content="2018-03-14T15:54:03.225Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Harvard 大学の CS50 という CS 入門用オンラインコースを受講して学んだこと">
+<meta name="twitter:description" content="コンピュータサイエンス (CS) の基礎をしっかり勉強しようと思い、とりあえず Open Source Society University (OSSU) で紹介されているカリキュラムが取っ掛かりにはよさそうだったので、まずこちらの CS50’s Introduction to Computer Science という Harvard 大学のオンラインコースを対象にして、 C 言語の講義回である">
+<meta name="twitter:image" content="https://skatsuta.github.io/images/2018-03-15-speller-3rd.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="Step by Step" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-62443224-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics --><!-- hexo-inject:begin --><link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css'><!-- hexo-inject:end -->
+
+</head>
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Step by Step</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">1歩ずつ 確実に 進歩していこう</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="http://www.google.com/search" method="get" accept-charset="utf-8" class="search-form">
+          <input type="search" name="q" maxlength="20" class="search-form-input" placeholder="Search">
+          <input type="hidden" name="sitesearch" value="skatsuta.github.io">
+          <input type="submit" value="" class="search-form-submit">
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-cs50" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/15/cs50/" class="article-date">
+  <time datetime="2018-03-14T15:26:27.000Z" itemprop="datePublished">2018-03-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Harvard 大学の CS50 という CS 入門用オンラインコースを受講して学んだこと
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>コンピュータサイエンス (CS) の基礎をしっかり勉強しようと思い、とりあえず <a href="https://github.com/ossu/computer-science" target="_blank" rel="noopener">Open Source Society University (OSSU)</a> で紹介されているカリキュラムが取っ掛かりにはよさそうだったので、まずこちらの <a href="https://www.edx.org/course/cs50s-introduction-computer-science-harvardx-cs50x" target="_blank" rel="noopener">CS50’s Introduction to Computer Science</a> という Harvard 大学のオンラインコースを対象にして、 C 言語の講義回である Week 1 から Week 4 までを受講しました。 OSSU の <a href="https://github.com/ossu/computer-science#introduction-to-computer-science" target="_blank" rel="noopener">Introduction to Computer Science</a> セクションの冒頭に書かれている</p>
+<blockquote>
+<p>feel free to skip straight to the second course when CS50 (the first course) moves away from C.</p>
+</blockquote>
+<p>という但し書きの通り、 CS50 の Week 5 以降の講義では主題が C から HTML や CSS, JavaScript, Python に変わってしまい、ざっと見た感じ内容もそれまでと比べて易しくなる印象だったので、 Week 5 以降は受講していません。</p>
+<p>受講した結論としては、「C 言語を使ってメモリ管理やアルゴリズム、データ構造などを意識しながら小規模のプログラムを書く」という良い経験ができ、そのへんの素養がなかった私にとってはとても良い勉強になりました。あと、 Week 4 の演習内の最後の課題である “speller” というプログラムの実行速度を競う以下のランキングで、いろいろチューニングを頑張った結果現状 3 位にまでランクインすることができた (2018 年 3 月 14 日時点) のも嬉しい事柄でした。</p>
+<p><a href="https://speller.cs50.net/#user/skatsuta" target="_blank" rel="noopener">Big Board - speller</a></p>
+<p><img src="/images/2018-03-15-speller-3rd.jpg" alt="3rd in speller big board"></p>
+<p>この位置につけるまで結構試行錯誤したので、嬉しくて思わずスクリーンショットを取ってしまいました (でもまだ上がいるんですよね……)。</p>
+<p>受けたかった部分の受講は完了し、それなりに満足できる結果も出せて一区切りついたので、 CS50 の Week 1 ~ 4 で学んだ内容をまとめてみようと思います。</p>
+<h1 id="CS50’s-Introduction-to-Computer-Science-について"><a href="#CS50’s-Introduction-to-Computer-Science-について" class="headerlink" title="CS50’s Introduction to Computer Science について"></a>CS50’s Introduction to Computer Science について</h1><p>これは <a href="https://www.edx.org" target="_blank" rel="noopener">edX</a> というオンラインコースプラットフォーム (いわゆる MOOC) 上で公開されている講座で、 Harvard 大学の CS50 というコンピュータサイエンス入門用の授業がオンラインで公開されているものです。受講するだけならアカウント登録をおこなえば無料で受けられます (これに限らず、 OSSU で紹介されている講座はすべて基本的に無料です。)</p>
+<p>この講座に限らずオンライン講座一般のいいところとしては、多くの場合レクチャーのビデオと演習用の課題がセットで用意されており、スムーズに独学できるところだと感じています。</p>
+<p>レクチャーはすべて英語ですが、字幕も表示できるのでそれで補足しながらであれば説明されていることは概ね把握できますし、スライドや PC の画面も表示されるので理解の助けになります。かつ、この CS50 の担当教授である David J. Malan 先生の熱量がすごく、たとえば生徒も巻き込んでステージ上でアルゴリズムのイメージを実演してくれるなどしながら、毎回非常にわかりやすく講義内容を説明してくれます。ただし私のように非ネイティブの人にとっては、この人の喋りは勢いがすごくかなり早口に感じると思うので、最初それについていくのが大変かもしれません。</p>
+<p>各講義回ごとに演習用の課題が用意されており、実際に課題の要件を満たすプログラムを実装して提出する必要があるのもやっていて楽しい点です。 CS50 では Cloud9 をベースにした CS50 IDE という Web IDE が提供されていて、ブラウザ上でコーディングから課題の提出までおこなえるので、ローカルに開発環境を構築する手間がまったく必要ないのもいいところです。実装結果を提出するとリモートでテストが実行され、要件を満たしているかどうか自動的に評価されるようになっていて、これも素晴らしい点だと思います。</p>
+<p>ただし Cloud9 のサーバーがおそらく米国にあるため、日本から使うと IDE のターミナル上でのコマンドの入力に微妙に遅延を感じます (遠い国にあるサーバーに SSH して操作するときに感じるラグと同じ感じ)。なお IDE エディタ上のコーティング作業自体はまったく問題ありません。</p>
+<h1 id="Week-1-4-の講義の内容と学んだこと"><a href="#Week-1-4-の講義の内容と学んだこと" class="headerlink" title="Week 1 ~ 4 の講義の内容と学んだこと"></a>Week 1 ~ 4 の講義の内容と学んだこと</h1><p>コンピュータサイエンスの入門講座のため、とても基礎的な内容ですが、私にとっては良い勉強になりました。特に探索やソートといったアルゴリズムや、 C 言語のメモリ管理、そしてデータ構造の実装について実際に手を動かして学ぶことができました。</p>
+<p>演習課題も背景知識や実装方針などが非常に丁寧に説明されていて (動画での解説もある)、初学者でもつまづかないようかなり配慮されているように感じられました。課題の内容も結構おもしろいものが多かったです。</p>
+<h2 id="Week-1"><a href="#Week-1" class="headerlink" title="Week 1"></a>Week 1</h2><p>何かしらプログラムを書いたことがある立場からすると、 Week 1 の内容は簡単でした。プリミティブなデータ型、演算子、ループ、条件分岐といった、 C 言語の入門として最初に習うものです。</p>
+<p>ただし演習課題の1つである <a href="https://docs.cs50.net/2018/x/psets/1/credit/credit.html" target="_blank" rel="noopener">Credit</a> という問題で、「クレジットカード番号の単純な認証には <a href="https://ja.wikipedia.org/wiki/Luhn%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0" target="_blank" rel="noopener">Luhn アルゴリズム</a>によるチェックサムが使われている」という背景知識が知れたことは勉強になりました。</p>
+<h3 id="レクチャー"><a href="#レクチャー" class="headerlink" title="レクチャー"></a>レクチャー</h3><ul>
+<li>Hello, World</li>
+<li>データタイプ (<code>int</code>, <code>double</code>, …)</li>
+<li>演算子 (<code>+</code>, <code>-</code>, …)</li>
+<li>ループ (<code>for</code>, <code>while</code>)</li>
+<li>条件分岐 (<code>if</code>, <code>switch</code>)</li>
+<li>計算誤差 (桁あふれ、打切り誤差等)</li>
+</ul>
+<h3 id="演習課題"><a href="#演習課題" class="headerlink" title="演習課題"></a>演習課題</h3><ul>
+<li><a href="https://docs.cs50.net/2018/x/psets/1/mario/more/mario.html" target="_blank" rel="noopener">Mario</a>: 入力値に応じた階段状のブロックを表示するプログラムを実装する</li>
+<li><a href="https://docs.cs50.net/2018/x/psets/1/cash/cash.html" target="_blank" rel="noopener">Cash</a>: お釣りの金額に必要な最小のコイン数を計算するプログラムを実装する</li>
+<li><a href="https://docs.cs50.net/2018/x/psets/1/credit/credit.html" target="_blank" rel="noopener">Credit</a>: Luhn アルゴリズムとクレジットカード会社ごとの発行番号の規約から、与えられたクレジットカード番号がどのカード会社のものか判定するプログラムを実装する</li>
+</ul>
+<p>演習課題は “less comfortable” と “more comfortable” のうちどちらか 1 つずつをやればいいようになっていましたが、せっかくなので両方やりました。</p>
+<h2 id="Week-1-continued"><a href="#Week-1-continued" class="headerlink" title="Week 1, continued"></a>Week 1, continued</h2><p>Week 1 の続きの講義もまだまだ初歩的な内容でした。主に文字列と配列に焦点が当たっていました。 C の文字列は非常に原始的で「NUL 文字 <code>\0</code> で終端された単なる <code>char</code> の配列である」という点は、日頃現代的な言語を利用していると不便さを感じるときもありますよね。</p>
+<p>おもしろかったのは <a href="https://docs.cs50.net/2018/x/psets/2/crack/crack.html" target="_blank" rel="noopener">Crack</a> という演習課題で、 <code>unistd.h</code> の <code>crypt</code> 関数で暗号化されたパスワードを、ブルートフォースアタックにより解読するという内容でした。</p>
+<h3 id="レクチャー-1"><a href="#レクチャー-1" class="headerlink" title="レクチャー"></a>レクチャー</h3><ul>
+<li>文字列と ASCII コード</li>
+<li>配列</li>
+<li>コマンドライン引数</li>
+<li>簡単な暗号</li>
+</ul>
+<h3 id="演習課題-1"><a href="#演習課題-1" class="headerlink" title="演習課題"></a>演習課題</h3><ul>
+<li><a href="https://docs.cs50.net/2018/x/psets/2/caesar/caesar.html" target="_blank" rel="noopener">Caesar</a>: Caesar 暗号で入力文字列を暗号化するプログラムを実装する</li>
+<li><a href="https://docs.cs50.net/2018/x/psets/2/vigenere/vigenere.html" target="_blank" rel="noopener">Vigenère</a>: Vigenère 暗号で入力文字列を暗号化するプログラムを実装する</li>
+<li><a href="https://docs.cs50.net/2018/x/psets/2/crack/crack.html" target="_blank" rel="noopener">Crack</a>: C の <code>crypt</code> 関数で暗号化されたパスワードのハッシュ文字列から、もとのパスワード文字列を見つけ出すプログラムを実装する</li>
+</ul>
+<p>上記 3 つ中 2 つを提出すればよいことになっていましたが、せっかくなので 3 つ全部やりました。 Crack の課題では、パスワードはすべてアルファベットで最長でも 5 文字という前提になっており、総当りで解読できるような条件設定になっています。 C で 1 ~ 5 文字の文字列の全組み合わせを生成する処理の実装方法に少し悩んだ記憶があります。</p>
+<h2 id="Week-2"><a href="#Week-2" class="headerlink" title="Week 2"></a>Week 2</h2><p>Week 2 から私にとってはだんだんおもしろくなってきました。アルゴリズムの勉強の最初に習う探索、ソート、計算量の話です。マージソートの計算量が <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mi>n</mi><mi>log</mi><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathit">n</span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mord mathit">n</span><span class="mclose">)</span></span></span></span> になる理由がよくわかっていなかったので、ちゃんと理解することができて勉強になりました。ただソートではクイックソートやヒープソートといった、現在主に使われているであろう高速ソートの説明がなかったのが少し残念です。</p>
+<p>今回の <a href="https://docs.cs50.net/2018/x/psets/3/music/music.html" target="_blank" rel="noopener">Music</a> という課題もなかなかおもしろい演習で、「楽譜データを読み込んでその曲の WAV ファイルを生成するプログラムの一部を実装する」というものでした。</p>
+<h3 id="レクチャー-2"><a href="#レクチャー-2" class="headerlink" title="レクチャー"></a>レクチャー</h3><ul>
+<li>文字列操作</li>
+<li>探索<ul>
+<li>線形探索 (linear search)</li>
+<li>二分探索 (binary search)</li>
+</ul>
+</li>
+<li>ソート<ul>
+<li>バブルソート (bubble sort)</li>
+<li>選択ソート (selection sort)</li>
+<li>挿入ソート (insertion sort)</li>
+<li>マージソート (merge sort)</li>
+</ul>
+</li>
+<li>計算量<ul>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi></mrow><annotation encoding="application/x-tex">O</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span></span></span></span> 記法と <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Ω</mi></mrow><annotation encoding="application/x-tex">\Omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathrm">Ω</span></span></span></span> 記法</li>
+</ul>
+</li>
+</ul>
+<h3 id="演習課題-2"><a href="#演習課題-2" class="headerlink" title="演習課題"></a>演習課題</h3><ul>
+<li><a href="https://docs.cs50.net/2018/x/psets/3/music/music.html" target="_blank" rel="noopener">Music</a>: 楽譜データを読み込んでその曲の WAV ファイルを生成するプログラムの一部を実装する</li>
+</ul>
+<p>この課題は一部のヘルパー関数を実装するだけで、実装ボリューム自体は全然大したことないのですが、音楽の知識がなかったので背景知識をきちんと把握するまでに手間取りました。あと日本人は音階の表記に「ドレミファソラシ」を使うので、 “CDEFGAB” を使う欧米の表記法との間を脳内で相互変換するのも最初苦労しました。</p>
+<p>まずこのプログラムの概要は、楽譜データのテキストファイルを読み込んで、記載された各音符の音階と長さの系列データをもとに、波形データを生成して WAV ファイルとして出力する、というものになっています。</p>
+<p>WAV ファイルの生成処理などはライブラリが同梱されており、大部分の処理についてはもともと実装されています。演習で実装するのは、楽譜のテキストデータの各音符の情報を入力として</p>
+<ul>
+<li>休符かどうか判定する関数 <code>is_rest</code></li>
+<li>音符の長さを計算する関数 <code>duration</code></li>
+<li>音符の高さから周波数 (Hz) を計算する関数 <code>frequency</code></li>
+</ul>
+<p>という3つのヘルパー関数だけなので、実装ボリューム自体は大して多くありません。</p>
+<p>ですが個人的に難しかったのが <code>frequency</code> の実装です。背景知識を読んでへーと思ったのが、黒鍵の音符には2通りの表記法があるという点でした。たとえば<code>ド</code>と<code>レ</code>の白鍵の間の黒鍵の音は、<code>ド#</code> とも<code>レb</code>とも表せるということです。なのでどちらの音符であっても、同じ周波数を出力しないといけません。</p>
+<p>また、各音符の高さの周波数は「4オクターブめの<code>ラ</code> (<code>A4</code>)」の 440 Hz を中心に、そこからの黒鍵を含めた音階の差分をもとに計算します。しかしながら「<code>ミ</code>と<code>ファ</code>」や「<code>シ</code>と<code>ド</code>」の間には黒鍵がありません。また、オクターブは「ドレミファソラシド」で一周すると1つ上下します。なので、たとえば「6オクターブめの<code>ミ</code> (<code>E6</code>) は基準となる4オクターブめの<code>ラ</code> (<code>A4</code>) から何音階分離れているか」といったことをどのように計算すればよいのか結構考えました。</p>
+<p>最終的に正しく実装できて、同梱されている楽譜データの「きらきら星」や「ロンドン橋落ちた」、「Jeopardy! のテーマソング」などがちゃんと再生されたときは達成感があり、嬉しかったです。</p>
+<p>演習課題としてはおもしろかったのですが、でもこれ探索もソートも計算量も全然関係ない問題なんですよね。なんでこの回の課題がこれなのか不思議です。</p>
+<h2 id="Week-3"><a href="#Week-3" class="headerlink" title="Week 3"></a>Week 3</h2><p>Week 3 ではメモリ管理やポインタが主題でした。私がよく使う Go 言語だとありがたいことに GC とエスケープ解析があるので、通常各ポインタのオブジェクトがスタックとヒープのどちらに置かれているか意識しないで済んでしまいます。一方 C 言語ではプログラマがちゃんと考えて、スタックにアロケートするかヒープにアロケートするか判断する必要があります。このように自力でメモリ管理をするプログラムを書く経験もやはり大事だなと感じました。</p>
+<p>Week 3 の演習課題はすべて Bitmap (BMP) の画像ファイルを扱う内容で、「BMP ファイルのヘッダ情報や画像データのレイアウトはどうなっているのか」といったことを実装を通してよく理解することができるようになっており、これもかなり勉強になる演習でした。 BMP ファイルは他の画像形式と比較すると中身が単純なため、画像ファイルのデータ構造の入門に適していると思います。</p>
+<h3 id="レクチャー-3"><a href="#レクチャー-3" class="headerlink" title="レクチャー"></a>レクチャー</h3><ul>
+<li>プログラムのメモリレイアウト (text, data, stack, heap)</li>
+<li>関数とスタック</li>
+<li>ポインタ</li>
+<li><code>malloc</code> とヒープ</li>
+<li>画像データ (Bitmap)</li>
+<li>構造体</li>
+</ul>
+<h3 id="演習課題-3"><a href="#演習課題-3" class="headerlink" title="演習課題"></a>演習課題</h3><ul>
+<li><a href="https://docs.cs50.net/2018/x/psets/4/whodunit/whodunit.html" target="_blank" rel="noopener">Whodunit</a>: 与えられた BMP ファイルに隠されたメッセージを見つけるプログラムを実装する</li>
+<li><a href="https://docs.cs50.net/2018/x/psets/4/resize/less/resize.html" target="_blank" rel="noopener">Resize</a>: BMP ファイルをリサイズするプログラムを実装する</li>
+<li><a href="https://docs.cs50.net/2018/x/psets/4/recover/recover.html" target="_blank" rel="noopener">Recover</a>: たくさんの BMP ファイルが1つに連結されたバイナリファイルを読み込んで、それを個別の BMP ファイルに復元するプログラムを実装する</li>
+</ul>
+<p>どれも BMP ファイルのヘッダ情報の詳細や画像データのレイアウトをきちんと理解した上で取り組まないとできない課題になっているため、 Bitmap の仕様のドキュメントをかなり読みました。また当然 <code>malloc</code> を使うところもあるので、レクチャーの内容に関連した応用課題にもなっています。</p>
+<p>個人的に上記 3 つの中で一番難しかったのが Resize の実装で、入力 BMP 画像をリサイズした結果として、ヘッダ情報と画像データレイアウト (特にパディング) が両方とも適切に変更された画像を生成しないといけません。どこで嵌っていたのか忘れてしまったのですが、これがなかなか正しく実装できず、たとえばニコちゃんマーク画像を拡大しようとしてもグチャグチャな出力画像になってしまったりして、正しい挙動をする実装にたどり着くまでにだいぶ苦労した記憶があります。最終的にちゃんと大きなニコちゃんマーク画像が出力されたときはやったーと思いました。</p>
+<h2 id="Week-4"><a href="#Week-4" class="headerlink" title="Week 4"></a>Week 4</h2><p>Week 4 は一番勉強になった講義回でした。データ構造はコンピュータサイエンスの基礎知識として非常に重要ですし、特にハッシュテーブルは数あるデータ構造の中でももっとも便利で利用頻度の高いものだと思うので、その実装方法を理解しておくことは大切だと感じました。言語組み込みや標準ライブラリにハッシュテーブルがない C 言語で自力で実装してみると、「ハッシュテーブルはリンクリストの配列により実装できる」ということがよく理解できますし、バケット数とエントリ数の比率であるロードファクターという指標がなぜ重要なのかも具体的にわかります。また、検索が確実に <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathrm">1</span><span class="mclose">)</span></span></span></span> でおこなえるトライ木も、その有用さがわかりました。</p>
+<p>今回の演習課題がこれまでで一番やりがいのあるものでした。プログラムの実行速度を競えるランキングがあるので、いろいろ試行錯誤しながらタイムを短縮していく楽しみがありました。</p>
+<h3 id="レクチャー-4"><a href="#レクチャー-4" class="headerlink" title="レクチャー"></a>レクチャー</h3><ul>
+<li>構造体</li>
+<li>コールスタック</li>
+<li>スタックオーバーフロー</li>
+<li>バッファオーバーフロー</li>
+<li>Valgrind</li>
+<li>データ構造<ul>
+<li>リンクリスト</li>
+<li>スタック</li>
+<li>キュー</li>
+<li>ツリー</li>
+<li>ハッシュテーブル</li>
+<li>トライ木</li>
+</ul>
+</li>
+</ul>
+<h3 id="演習課題-4"><a href="#演習課題-4" class="headerlink" title="演習課題"></a>演習課題</h3><ul>
+<li><a href="https://docs.cs50.net/2018/x/psets/5/speller/speller.html" target="_blank" rel="noopener">Speller</a>: あらかじめ辞書データを読み込んだ上で、文章が書かれたテキストファイルの各単語を逐次読み込んでいき、それが辞書に載っているかどうか判定して載っていない場合には出力するプログラムの一部を実装する</li>
+</ul>
+<p>これがこの記事の冒頭で述べていた演習課題です。プログラムの大枠はあらかじめ実装されており、演習として実装する部分は以下の4つの関数です。</p>
+<ul>
+<li>辞書データを読み込む関数 <code>load</code></li>
+<li>ある単語が辞書に含まれているかチェックする関数 <code>check</code></li>
+<li>辞書内の単語の総数を返す関数 <code>size</code></li>
+<li>辞書データをアンロードする関数 <code>unload</code></li>
+</ul>
+<p>プログラムの流れとしては、 <code>load</code> 関数で辞書ファイルを読み込んで内部で適切なデータ構造 (ハッシュテーブルやトライ木など) として保持したあと、文章ファイルを単語単位で読み込んでいき、それが辞書データに含まれている単語か否かを <code>check</code> 関数で判別していくという流れです。最後の <code>unload</code> 関数は <code>malloc</code> したデータを適切に解放する処理をおこなうステップで、ヒープにアロケートしたオブジェクトをここですべてきちんと <code>free</code> しないと、 Valgrind によるメモリリークチェックで怒られてしまいます。</p>
+<p>そしてプログラム内でそれぞれの関数の処理にかかった時間が計測されるようになっており、それを如何に縮められるかが頭の使いどころになっています。辞書データの保持方法として「ハッシュテーブルを使った実装方法」と「トライ木を使った実装方法」がそれぞれ説明されている非常に丁寧な解説動画が用意されているため、要件を満たす各関数を実装すること自体はそれほど苦労せずにおこなえます。しかしながら、単にそれに沿った実装をしただけだとあまり速度は出ません。</p>
+<p>この演習課題のおもしろいところは、以下のように実行速度のランキングが集計されて公開されており (誰でも見られます)、生徒同士 (とコーススタッフ) で自分が実装したプログラムのタイムを競えるようになっているところです。2018 年 3 月 14 日時点で 330 名以上がエントリしています。</p>
+<p><a href="https://speller.cs50.net" target="_blank" rel="noopener">Big Board - speller</a></p>
+<p>私の場合、一番最初の実装ではたしか 20 ~ 30 位の間ぐらいだったと思います。その後いろいろと試行錯誤しながら実行速度の改善を重ねていき、運の良さもありましたが最終的には現時点で 3 位にランクインするタイムを出すことができました。これを通じてパフォーマンスチューニングという観点での学びがたくさんあり、非常に勉強になりました。今回はもう記事が長くなってしまったので細かい話は書きませんが、今後また別の記事でこの演習において自分がやったことの詳細を書くかもしれません (ただしこの演習課題に特化した話をしても誰のためにもならないと思うので、一般的な話に汎化したいとは思います)。</p>
+<p>実際のところ私よりも上位のランカーがまだいるわけなので、まだ最適化の余地は残されているんだろうとは思っていますが、今の私の知識や技術ではこれ以上の改善は難しい状況なので、いつかまた修行を積んでから再度挑戦できたらいいなと思います。このランキングの参加者は基本的に初学者のはずで、演習課題の実装内容自体も簡素なものなので、おそらく速度に気を使って C / C++ 言語を長い間書いてきたプログラマの方であれば、私よりも全然速いプログラムを書ける可能性がかなり高いと思っています。なのでもしこの記事を読んで興味が沸いた方は、この演習だけでもやってみるとおもしろいかもしれません。</p>
+<h1 id="勉強の方法の-1-つとしてオンラインコースはおすすめかも"><a href="#勉強の方法の-1-つとしてオンラインコースはおすすめかも" class="headerlink" title="勉強の方法の 1 つとしてオンラインコースはおすすめかも"></a>勉強の方法の 1 つとしてオンラインコースはおすすめかも</h1><p>何かを勉強する方法として、良質なオンラインコースがあるようであれば、それをやってみるのは 1 つの方法としてありだなーと感じました。もちろん書籍を読んだりするほうが勉強効率としては桁違いに良いはずで、それで進められるのが理想的だと思います。オンラインコースは時間がかかる割にはあまり多くのことを学ぶことはできないでしょう。しかしながら演習課題があって自分で手を動かし、しかもその結果がすぐに評価される仕組みの上で取り組むと、ゲーミフィケーション的な効果で自分が積極的に参加している感じになり、モチベーションを高く維持することができるなと感じました。特に基礎的・入門的な内容の勉強にはオンラインコースは 1 つの選択肢としてありなのではないかと思います。</p>
+<p>あと個人的に良かった副作用として、 C 言語が結構好きになりました。日頃現代的な言語を使っていると古臭い言語に感じることは確かで、実際不便な点やバグを生みやすい点も数多くありますが、この素朴さは特に低レイヤのプログラムを書くのにはやっぱり使いやすいんだろうなと思います。今となっては C でも Go でも問題なくポインタを扱うことができるようになっていますが、実は昔 C のポインタで一度挫折した経験があったので、それを無事克服することができてよかったです。</p>
+<p>OSSU のカリキュラムに従い、次は <a href="https://www.edx.org/course/introduction-computer-science-mitx-6-00-1x-11" target="_blank" rel="noopener">Introduction to Computer Science and Programming Using Python</a> という MIT のオンラインコースを受講しています。これまで Python はほとんど書いたことがありませんでしたが、書いてみるとこれも非常に使いやすい言語で、人気の理由がよくわかります。また一区切りついたらレポートを書くかもしれません。</p>
+<p>引き続き日々精進していこうと思います。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="https://skatsuta.github.io/2018/03/15/cs50/" data-id="cjer9nd310000b4cqaxv656p8" class="article-share-link">Share</a>
+      
+
+      
+        <a href="https://skatsuta.github.io/2018/03/15/cs50/#disqus_thread" class="article-comment-link">Comments</a>
+      
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CS50/">CS50</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Computer-science/">Computer science</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Harvard-University/">Harvard University</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/edX/">edX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/speller/">speller</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/03/06/hyuki-crypt-book-go-3/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Aerospike/">Aerospike</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Amazon-EC2/">Amazon EC2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AngularJS/">AngularJS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ant/">Ant</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Boot2Docker/">Boot2Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CBC-Mode/">CBC Mode</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CLI/">CLI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CS50/">CS50</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Computer-science/">Computer science</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Cryptography/">Cryptography</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DES/">DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/">Docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Machine/">Docker Machine</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker-Remote-API/">Docker Remote API</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Driver-Plugins/">Driver Plugins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub-Pages/">GitHub Pages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/">Go</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPie/">HTTPie</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Harvard-University/">Harvard University</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/KVS/">KVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Maven/">Maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Play-Framework/">Play Framework</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Rijndael/">Rijndael</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ruby/">Ruby</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RubyGems/">RubyGems</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scala/">Scala</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Triple-DES/">Triple DES</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VirtualBox/">VirtualBox</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aql/">aql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bashrc/">bashrc</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/edX/">edX</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sbt/">sbt</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-script/">shell script</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/speller/">speller</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wercker/">wercker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zshrc/">zshrc</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AES/" style="font-size: 12.5px;">AES</a> <a href="/tags/Aerospike/" style="font-size: 12.5px;">Aerospike</a> <a href="/tags/Amazon-EC2/" style="font-size: 10px;">Amazon EC2</a> <a href="/tags/AngularJS/" style="font-size: 10px;">AngularJS</a> <a href="/tags/Ant/" style="font-size: 10px;">Ant</a> <a href="/tags/Boot2Docker/" style="font-size: 10px;">Boot2Docker</a> <a href="/tags/CBC-Mode/" style="font-size: 10px;">CBC Mode</a> <a href="/tags/CLI/" style="font-size: 10px;">CLI</a> <a href="/tags/CS50/" style="font-size: 10px;">CS50</a> <a href="/tags/Computer-science/" style="font-size: 10px;">Computer science</a> <a href="/tags/Cryptography/" style="font-size: 15px;">Cryptography</a> <a href="/tags/DES/" style="font-size: 10px;">DES</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Docker-Machine/" style="font-size: 15px;">Docker Machine</a> <a href="/tags/Docker-Remote-API/" style="font-size: 10px;">Docker Remote API</a> <a href="/tags/Driver-Plugins/" style="font-size: 10px;">Driver Plugins</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/GitHub-Pages/" style="font-size: 10px;">GitHub Pages</a> <a href="/tags/Go/" style="font-size: 20px;">Go</a> <a href="/tags/Gradle/" style="font-size: 10px;">Gradle</a> <a href="/tags/HTTPie/" style="font-size: 10px;">HTTPie</a> <a href="/tags/Harvard-University/" style="font-size: 10px;">Harvard University</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/KVS/" style="font-size: 10px;">KVS</a> <a href="/tags/Maven/" style="font-size: 10px;">Maven</a> <a href="/tags/Play-Framework/" style="font-size: 10px;">Play Framework</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/Rijndael/" style="font-size: 10px;">Rijndael</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/RubyGems/" style="font-size: 10px;">RubyGems</a> <a href="/tags/Scala/" style="font-size: 10px;">Scala</a> <a href="/tags/Triple-DES/" style="font-size: 10px;">Triple DES</a> <a href="/tags/VirtualBox/" style="font-size: 12.5px;">VirtualBox</a> <a href="/tags/aql/" style="font-size: 10px;">aql</a> <a href="/tags/bashrc/" style="font-size: 10px;">bashrc</a> <a href="/tags/edX/" style="font-size: 10px;">edX</a> <a href="/tags/sbt/" style="font-size: 10px;">sbt</a> <a href="/tags/shell-script/" style="font-size: 10px;">shell script</a> <a href="/tags/speller/" style="font-size: 10px;">speller</a> <a href="/tags/wercker/" style="font-size: 15px;">wercker</a> <a href="/tags/zshrc/" style="font-size: 10px;">zshrc</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">3月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">3月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">1月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">12月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">11月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">10月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">8月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">7月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">6月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">5月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">4月 2015</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/15/cs50/">Harvard 大学の CS50 という CS 入門用オンラインコースを受講して学んだこと</a>
+          </li>
+        
+          <li>
+            <a href="/2016/03/06/hyuki-crypt-book-go-3/">Go 言語で学ぶ『暗号技術入門』Part 3 -CBC Mode-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/19/hyuki-crypt-book-go-2/">Go 言語で学ぶ『暗号技術入門』Part 2 -AES-</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/02/hyuki-crypt-book-go-1/">Go 言語で学ぶ『暗号技術入門』Part 1 -DES, Triple DES-</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/29/value-receiver-pointer-receiver/">Go 言語の値レシーバとポインタレシーバ</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 skatsuta<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/xiangming/landscape-plus" target="_blank">Landscape-plus</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+  <!-- totop start -->
+<div id="totop">
+<a title="totop"><img src="/img/scrollup.png"/></a>
+</div>
+
+<!-- totop end -->
+
+<script>
+  var disqus_shortname = 'skatsutagithubio';
+  
+  var disqus_url = 'https://skatsuta.github.io/2018/03/15/cs50/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62443224-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>
